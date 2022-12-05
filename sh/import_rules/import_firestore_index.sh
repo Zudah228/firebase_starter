@@ -1,0 +1,1 @@
+firebase firestore:indexes > rules/firestore.indexes.json

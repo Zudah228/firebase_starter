@@ -1,8 +1,8 @@
 import { DocumentData } from "firebase-admin/firestore";
 
-import { getFirestoreRepository } from "../../../../../domain/repository/admin_firestore/AdminFirestoreRepository";
-import { Fields } from "../../../../../utils/ClassHelper";
-import { FirebaseUnitTest } from "../../../../index";
+import { getFirestoreRepository } from "../../../../domain/repository/admin_firestore/AdminFirestoreRepository";
+import { Fields } from "../../../../utils/ClassHelper";
+import { FirebaseUnitTest } from "../../../index";
 
 /** */
 class TestEntity {
@@ -14,7 +14,6 @@ class TestEntity {
   booleanField!: boolean;
 }
 
-jest.setTimeout(20000);
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認
  */
@@ -27,7 +26,7 @@ describe("AdminFirestoreRepository のテスト", () => {
   });
 
   afterEach(async () => {
-    await Promise.all([firebaseUnitTest.testEnv.clearFirestore()]);
+    await firebaseUnitTest.dispose();
   });
 
   test("プリミティブ型の保存", async () => {

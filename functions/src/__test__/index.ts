@@ -1,5 +1,3 @@
-import * as fs from "fs";
-
 import {
   assertFails,
   initializeTestEnvironment,
@@ -7,17 +5,17 @@ import {
   TokenOptions,
 } from "@firebase/rules-unit-testing";
 
-const projectId = "";
+import { testConfig } from "./config";
 
 /**
  * Firebase の unit テストを行うための class
  */
 export class FirebaseUnitTest {
   constructor(testEnv: RulesTestEnvironment) {
-    this.testEnv = testEnv;
+    this.#testEnv = testEnv;
   }
 
-  testEnv: RulesTestEnvironment;
+  #testEnv: RulesTestEnvironment;
 
   /**
    * ルール適応外のテストは、コールバック内でしか行うことができない
@@ -26,16 +24,16 @@ export class FirebaseUnitTest {
    * > make sure to perform all operations on the context within the callback function and return a Promise
    * > that resolves when the operations are done.
    */
-  public withSecurityRulesDisabled() {
-    return this.testEnv.withSecurityRulesDisabled;
+  public get testEnv() {
+    return this.#testEnv;
   }
 
   public get unauthenticatedUser() {
-    return this.testEnv.unauthenticatedContext();
+    return this.#testEnv.unauthenticatedContext();
   }
 
   public getAuthenticatedUser(uid: string, tokenOptions?: TokenOptions | undefined) {
-    return this.testEnv.authenticatedContext(uid, tokenOptions);
+    return this.#testEnv.authenticatedContext(uid, tokenOptions);
   }
 
   public fail(pr: Promise<unknown>) {
@@ -48,25 +46,13 @@ export class FirebaseUnitTest {
    */
   static async setUp(): Promise<FirebaseUnitTest> {
     // セキュリティルールの読み込み
-    const testEnv = await initializeTestEnvironment({
-      projectId,
-      firestore: {
-        rules: fs.readFileSync(`${__dirname}/../../../rules/firestore.rules`, "utf8"),
-        host: "localhost",
-        port: 8080,
-      },
-      storage: {
-        rules: fs.readFileSync(`${__dirname}/../../../rules/storage.rules`, "utf8"),
-        host: "localhost",
-        port: 9199,
-      },
-    });
+    const testEnv = await initializeTestEnvironment(testConfig.emulatorConfig);
 
     return new FirebaseUnitTest(testEnv);
   }
 
   async dispose(): Promise<void> {
-    await this.testEnv.clearFirestore();
-    await this.testEnv.clearStorage();
+    await this.#testEnv.clearFirestore();
+    await this.#testEnv.clearStorage();
   }
 }

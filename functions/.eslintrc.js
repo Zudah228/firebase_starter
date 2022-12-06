@@ -77,6 +77,7 @@ module.exports = {
     quotes: ["warn", "double"],
     "object-curly-spacing": ["warn", "always"],
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "import/order": [
       "warn",
       {

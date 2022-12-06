@@ -2,9 +2,9 @@ import { Bucket } from "@google-cloud/storage";
 import { Storage } from "firebase-admin/lib/storage/storage";
 
 /**
- * Admin Firebase Cloud Storage SDK を利用するためのクラス。
+ * Admin Cloud Storage SDK を利用するためのクラス。
  */
-export class AdminFirebaseStorageRepository {
+export class AdminCloudStorageRepository {
   constructor(storage: Storage, bucket?: string) {
     this.storageBucket = storage.bucket(bucket);
   }
@@ -16,6 +16,6 @@ export class AdminFirebaseStorageRepository {
   }
 }
 
-export function getAdminFirebaseStorageRepository(storage: Storage, bucket?: string): AdminFirebaseStorageRepository {
-  return new AdminFirebaseStorageRepository(storage, bucket);
+export function getCloudFirebaseStorageRepository(storage: Storage, bucket?: string): AdminCloudStorageRepository {
+  return new AdminCloudStorageRepository(storage, bucket);
 }

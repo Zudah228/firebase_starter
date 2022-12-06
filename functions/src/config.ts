@@ -14,6 +14,7 @@ export const getAdminStorage = getStorage;
 export const getAdminMessaging = getMessaging;
 
 const { PROJECT_ID, AUTH_DOMAIN, DATABASE_URL, STORAGE_BUCKET } = process.env;
+
 export const config = {
   CLOUD_FUNCTIONS_REGION,
   PROJECT_ID,

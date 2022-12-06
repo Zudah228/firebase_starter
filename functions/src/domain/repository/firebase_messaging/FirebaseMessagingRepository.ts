@@ -36,19 +36,6 @@ export class FirebaseMessagingRepository {
     }
   }
 
-  async sendToTopic(topic: string, content: FcmMessageContent, priority?: string): Promise<void> {
-    try {
-      const option = {
-        priority: priority ?? "high",
-      };
-
-      await this.messaging.sendToTopic(topic, { notification: content }, option);
-    } catch (e) {
-      console.error(e);
-      return;
-    }
-  }
-
   maxBatchSize = 500;
 
   /**
@@ -84,6 +71,19 @@ export class FirebaseMessagingRepository {
       })
     );
     await Promise.all(promises);
+  }
+
+  async sendToTopic(topic: string, content: FcmMessageContent, priority?: string): Promise<void> {
+    try {
+      const option = {
+        priority: priority ?? "high",
+      };
+
+      await this.messaging.sendToTopic(topic, { notification: content }, option);
+    } catch (e) {
+      console.error(e);
+      return;
+    }
   }
 }
 

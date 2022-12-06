@@ -1,6 +1,11 @@
 import { firestore } from "firebase-admin";
 
-export type FirestoreDocument<T> = { entity: T } & { ref: firestore.DocumentReference };
+// read
+export type FirestoreDocument<T> = { entity: T } & {
+  ref: firestore.DocumentReference | firebase.default.firestore.DocumentReference;
+};
+
+// write
 export type FirestoreWriteType<T> = {
   [K in keyof T]: T[K] | firestore.FieldValue;
 };

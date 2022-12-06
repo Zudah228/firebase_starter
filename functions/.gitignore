@@ -12,5 +12,8 @@ node_modules/
 *-debug.log
 
 # service account key
-keys/**
-!keys/.gitkeep
+src/keys/**
+!src/keys/.gitkeep
+
+# env
+.env

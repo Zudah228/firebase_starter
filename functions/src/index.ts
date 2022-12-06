@@ -1,12 +1,11 @@
 import { initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
-
-import { getAdminFirestore } from "@/config";
 
 initializeApp(functions.config().firebase);
 
 // undefined の値を Firestore に追加しない設定。
-getAdminFirestore().settings({
+getFirestore().settings({
   ignoreUndefinedProperties: true,
 });
 

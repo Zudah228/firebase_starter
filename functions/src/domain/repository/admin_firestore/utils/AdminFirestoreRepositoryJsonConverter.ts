@@ -33,10 +33,20 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
     return plainToInstance<T, Record<string, unknown>>(this.entityConstructor, this.encodeFirestoreTypes(data));
   }
 
-  protected fromSnapshot(snapshot: firestore.QueryDocumentSnapshot): FirestoreDocument<T>;
-  protected fromSnapshot(snapshot: firestore.DocumentSnapshot): FirestoreDocument<T> | undefined;
+  protected fromSnapshot(
+    snapshot: firestore.QueryDocumentSnapshot | firebase.default.firestore.QueryDocumentSnapshot
+  ): FirestoreDocument<T>;
+  protected fromSnapshot(
+    snapshot: firestore.DocumentSnapshot | firebase.default.firestore.DocumentSnapshot
+  ): FirestoreDocument<T> | undefined;
 
-  protected fromSnapshot(snapshot: firestore.QueryDocumentSnapshot | firestore.DocumentSnapshot): FirestoreDocument<T> | undefined {
+  protected fromSnapshot(
+    snapshot:
+      | firestore.QueryDocumentSnapshot
+      | firebase.default.firestore.QueryDocumentSnapshot
+      | firestore.DocumentSnapshot
+      | firebase.default.firestore.DocumentSnapshot
+  ): FirestoreDocument<T> | undefined {
     if (!snapshot.exists) {
       return undefined;
     }
@@ -48,6 +58,13 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
     };
   }
 
+  /**
+   * Firestore 独自の型を、JavaScript の型に変換
+   * DocumentReference はそのまま
+   *
+   * @param obj param
+   * @returns
+   */
   private encodeFirestoreTypes(obj: Record<string, unknown>) {
     Object.keys(obj).forEach((key) => {
       const val = obj[key];
@@ -58,8 +75,7 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
         const { latitude, longitude } = val;
         obj[key] = { latitude, longitude };
       } else if (isDocumentReference(val)) {
-        const { id, path } = val;
-        obj[key] = { id, path };
+        obj[key] = val;
       } else if (isObject(val)) {
         this.encodeFirestoreTypes(val);
       }
@@ -67,6 +83,12 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
     return obj;
   }
 
+  /**
+   * ゲッターや関数を取り除く
+   *
+   * @param obj param
+   * @returns
+   */
   private extractAllGetters(obj: Record<string, unknown>) {
     const prototype = Object.getPrototypeOf(obj);
     const fromInstanceObj = Object.keys(obj);

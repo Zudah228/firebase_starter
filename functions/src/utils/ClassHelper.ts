@@ -1,6 +1,11 @@
-export type Fields<T> = { [P in FieldNames<T>]: T[P] };
+/**
+ * Function を除外した型
+ *
+ * getter や setter は除外できない
+ */
+export type Fields<T> = Omit<T, PickFunction<T>>;
 
-// T のメソッド (正確には値が関数であるプロパティ) 以外の名前のみを列挙する。
-export type FieldNames<T> = {
-  [P in keyof T]: T[P] extends (...args: unknown[]) => unknown ? never : P;
+type PickFunction<T> = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  [K in keyof T]: T[K] extends Function ? K : never;
 }[keyof T];

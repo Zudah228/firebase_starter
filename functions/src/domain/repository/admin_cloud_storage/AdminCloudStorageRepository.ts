@@ -11,11 +11,20 @@ export class AdminCloudStorageRepository {
 
   private storageBucket: Bucket;
 
-  async delete(path: string) {
+  /**
+   *
+   * @param {string} path - `images/sample.png`
+   * @param {string | Buffer} buffer
+   */
+  async save(path: string, buffer: string | Buffer): Promise<void> {
+    await this.storageBucket.file(path).save(buffer);
+  }
+
+  async delete(path: string): Promise<void> {
     await this.storageBucket.file(path).delete();
   }
 }
 
-export function getCloudFirebaseStorageRepository(storage: Storage, bucket?: string): AdminCloudStorageRepository {
+export function getAdminCloudStorageRepository(storage: Storage, bucket?: string): AdminCloudStorageRepository {
   return new AdminCloudStorageRepository(storage, bucket);
 }

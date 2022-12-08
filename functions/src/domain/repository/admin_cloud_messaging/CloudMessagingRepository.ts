@@ -2,7 +2,7 @@ import { messaging } from "firebase-admin";
 import { Messaging } from "firebase-admin/lib/messaging/messaging";
 import { Message } from "firebase-admin/lib/messaging/messaging-api";
 
-import { CloudFunctionsHelper } from "@/domain/utils/CloudFunctionsHelper";
+import { functionsLogger } from "@/utils/CloudFunctionsHelper";
 
 export type FcmBatchMessage = messaging.Message;
 export type FcmBatchMessageContent = messaging.Notification;
@@ -67,7 +67,7 @@ export class FirebaseMessagingRepository {
 
     const promises = msgs.map((ms) =>
       this.messaging.sendAll(ms).catch((e) => {
-        CloudFunctionsHelper.logger.error(e);
+        functionsLogger.error(e);
       })
     );
     await Promise.all(promises);

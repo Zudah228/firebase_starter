@@ -11,7 +11,7 @@ import { scriptConfig } from "./config";
 export function initialize(): void {
   const { PROJECT_ID, DATABASE_URL, STORAGE_BUCKET } = scriptConfig;
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const serviceAccount = require(`service_account_keys/${PROJECT_ID}.json`);
+  const serviceAccount = require(`./service_account_keys/${PROJECT_ID}.json`);
 
   const app = initializeApp({
     credential: admin.credential.cert(serviceAccount),

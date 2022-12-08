@@ -91,6 +91,9 @@ module.exports = {
     "import/no-unresolved": 0,
     "import/prefer-default-export": 0,
     "unused-imports/no-unused-imports": "warn",
+    "keyword-spacing": "warn",
+    "no-empty": "warn",
+    "space-before-function-paren": "off",
     "valid-jsdoc": [0],
     "require-jsdoc": [
       "warn",

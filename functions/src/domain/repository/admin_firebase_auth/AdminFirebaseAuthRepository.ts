@@ -1,9 +1,8 @@
 import { Auth } from "firebase-admin/lib/auth/auth";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { UserRecord } from "firebase-admin/lib/auth/user-record";
-import * as functions from "firebase-functions";
 
-import { authCustomClaim } from "./CustomClaims";
+import { AuthCustomClaim } from "./CustomClaims";
 
 /**
  * Admin Firebase Auth SDK を利用するためのクラス。
@@ -24,7 +23,7 @@ export class AdminFirebaseAuthRepository {
     });
   }
 
-  async setCustomClaim(uid: string, customClaim: authCustomClaim): Promise<void> {
+  async setCustomClaim(uid: string, customClaim: AuthCustomClaim): Promise<void> {
     await this.auth.setCustomUserClaims(uid, customClaim);
   }
 
@@ -33,7 +32,6 @@ export class AdminFirebaseAuthRepository {
       // ユーザーが取得できたら削除する
       await this.auth.getUser(uid);
     } catch (e) {
-      functions.logger.log(e);
       return;
     }
     await this.auth.deleteUser(uid);

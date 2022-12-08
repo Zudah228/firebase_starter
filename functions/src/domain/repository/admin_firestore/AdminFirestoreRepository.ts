@@ -15,21 +15,19 @@ import { AdminFirestoreRepositoryJsonConverter } from "./utils/AdminFirestoreRep
  * path を class の static に設定するなど、path の変更容易性を担保すること。
  */
 export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonConverter<T> {
-  constructor(entityConstructor: ClassConstructor<T>, firestore: Firestore | firebase.default.firestore.Firestore) {
+  constructor(entityConstructor: ClassConstructor<T>, firestore: Firestore) {
     super(entityConstructor);
     this.firestore = firestore;
   }
 
-  private firestore: Firestore | firebase.default.firestore.Firestore;
+  private firestore: Firestore;
 
   /**
    * transaction などで使用するために public に設定している。
    * @param documentPath
    * @returns
    */
-  public getDocumentRef(
-    documentPath: string
-  ): firestore.DocumentReference | firebase.default.firestore.DocumentReference {
+  public getDocumentRef(documentPath: string): firestore.DocumentReference {
     return this.firestore.doc(documentPath);
   }
 
@@ -140,9 +138,9 @@ export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonCon
  * @param entityConstructor
  * @returns
  */
-export function getFirestoreRepository<T>(
+export function getAdminFirestoreRepository<T>(
   entityConstructor: ClassConstructor<T>,
-  firestore: Firestore | firebase.default.firestore.Firestore
+  firestore: Firestore
 ): AdminFirestoreRepository<T> {
   return new AdminFirestoreRepository<T>(entityConstructor, firestore);
 }

@@ -23,6 +23,13 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
     const objectGetters = this.extractAllGetters(item as Record<string, unknown>);
 
     const serializableObj = { ...item, ...objectGetters };
+
+    // undefined の削除
+    Object.entries(serializableObj).forEach(([propertyKey, _]) => {
+      if (serializableObj[propertyKey] === undefined) {
+        delete serializableObj[propertyKey];
+      }
+    });
     return serializableObj;
   }
 
@@ -33,27 +40,17 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
     return plainToInstance<T, Record<string, unknown>>(this.entityConstructor, this.encodeFirestoreTypes(data));
   }
 
-  protected fromSnapshot(
-    snapshot: firestore.QueryDocumentSnapshot | firebase.default.firestore.QueryDocumentSnapshot
-  ): FirestoreDocument<T>;
-  protected fromSnapshot(
-    snapshot: firestore.DocumentSnapshot | firebase.default.firestore.DocumentSnapshot
-  ): FirestoreDocument<T> | undefined;
+  protected fromSnapshot(snapshot: firestore.QueryDocumentSnapshot): FirestoreDocument<T>;
+  protected fromSnapshot(snapshot: firestore.DocumentSnapshot): FirestoreDocument<T> | undefined;
 
   protected fromSnapshot(
-    snapshot:
-      | firestore.QueryDocumentSnapshot
-      | firebase.default.firestore.QueryDocumentSnapshot
-      | firestore.DocumentSnapshot
-      | firebase.default.firestore.DocumentSnapshot
+    snapshot: firestore.QueryDocumentSnapshot | firestore.DocumentSnapshot
   ): FirestoreDocument<T> | undefined {
     if (!snapshot.exists) {
       return undefined;
     }
     return {
       ref: snapshot.ref,
-      // exists で null ではないことが保証されている
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       entity: this.fromJson(snapshot.data()!),
     };
   }
@@ -72,8 +69,7 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
       if (isTimestamp(val)) {
         obj[key] = val.toDate();
       } else if (isGeoPoint(val)) {
-        const { latitude, longitude } = val;
-        obj[key] = { latitude, longitude };
+        obj[key] = val;
       } else if (isDocumentReference(val)) {
         obj[key] = val;
       } else if (isObject(val)) {
@@ -100,7 +96,7 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
     const getters = keys
       .map((key) => Object.getOwnPropertyDescriptor(prototype, key))
       .map((descriptor, index) => {
-        // function を除外してしまうと、FieldValue ものぞいてしまうので、ここでブロック
+        // FieldValue は残す
         if (descriptor instanceof firestore.FieldValue) {
           return keys[index];
         }

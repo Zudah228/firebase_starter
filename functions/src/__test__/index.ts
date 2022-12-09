@@ -68,6 +68,7 @@ export class FirebaseUnitTest {
 
   /**
    * Firebase Admin SDK
+   * Admin Firestore Repository の利用は、 getAdminFirestoreRepository に getFirestore() を渡す
    * @param test
    * @returns
    */
@@ -125,6 +126,10 @@ export class FirebaseUnitTest {
     return assertFails(pr);
   }
 
+  /**
+   * @param pr - 失敗させたい処理
+   * @returns {boolean} - true: 正常に失敗
+   */
   public async causeError(pr: () => Promise<unknown>): Promise<boolean> {
     try {
       await pr();

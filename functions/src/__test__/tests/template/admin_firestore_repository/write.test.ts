@@ -13,7 +13,6 @@ import { getTestEntityFirestoreRepository, TestEntity, TestEntityWriteType, Test
 // Todo: DocumentReference 型のテスト
 // Todo: GeoPoint 型のテスト
 // Todo: 各 FieldValue のテスト
-// Todo: フィールド内の class のテスト
 // Todo: フィールド内の class の配列のテスト
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認
@@ -165,5 +164,38 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
 
     expect(data).toBeDefined();
     expect(data).toEqual({ classField });
+  });
+  test("class 配列のフィールドの保存", async () => {
+    let data: DocumentData | undefined;
+
+    const classField: OmitFunction<TestNestedClass> = {
+      stringField: "string",
+      arrayField: ["element1", "element2", undefined],
+      mapField: {
+        key1: "value1",
+        key2: "value2",
+        key3: undefined,
+      },
+    };
+    const classArrayField = [classField, classField];
+
+    const item: TestEntityWriteType = {
+      classArrayField: [new TestNestedClass(classField), new TestNestedClass(classField)],
+    };
+    // Repository の使用
+    await firebaseUnitTest.withAdminSdk(async (firestore) => {
+      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
+
+      await testEntityRepository.set(documentPath, item);
+    });
+
+    // 取得して確認
+    await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
+      const doc = await firestore.doc(documentPath).get();
+      data = doc.data();
+    });
+
+    expect(data).toBeDefined();
+    expect(data).toEqual({ classArrayField });
   });
 });

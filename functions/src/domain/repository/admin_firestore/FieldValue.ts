@@ -10,7 +10,7 @@ export class FirestoreFieldValue {
 
   static deleteFiled = () => fieldValue.delete();
   static serverTimestamp = () => fieldValue.serverTimestamp();
-  static arrayUnion = (...elements: unknown[]) => fieldValue.arrayUnion(elements);
-  static arrayRemove = (...elements: unknown[]) => fieldValue.arrayRemove(elements);
+  static arrayUnion = (...elements: unknown[]) => fieldValue.arrayUnion(...elements);
+  static arrayRemove = (...elements: unknown[]) => fieldValue.arrayRemove(...elements);
   static increment = (n: number) => fieldValue.increment(n);
 }

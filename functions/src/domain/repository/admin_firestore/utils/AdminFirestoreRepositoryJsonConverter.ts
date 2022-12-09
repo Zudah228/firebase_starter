@@ -43,6 +43,13 @@ export abstract class AdminFirestoreRepositoryJsonConverter<
             return e;
           })
           .filter((e) => e !== undefined);
+      } else if (
+        value instanceof Date ||
+        value instanceof firestore.DocumentReference ||
+        value instanceof firestore.GeoPoint ||
+        value instanceof firestore.FieldValue
+      ) {
+        // skip
       }
       // object: this.toJson() の実行
       else if (isObject(value)) {

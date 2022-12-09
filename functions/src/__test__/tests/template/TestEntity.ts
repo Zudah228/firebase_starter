@@ -21,6 +21,7 @@ export class TestEntity {
   readonly nullField?: null;
 
   readonly arrayField?: (string | undefined)[];
+  readonly anotherArrayField?: (number | undefined)[];
   readonly mapField?: TestMapField;
 
   readonly dateField?: Date;
@@ -63,11 +64,11 @@ export type TestMapField = {
 };
 
 // Firestore
-export type TestEntityWriteType = FirestoreWriteType<
+export type FirestoreTestEntityWriteType = FirestoreWriteType<
   Omit<TestEntity, "mapField"> & {
     mapField?: FirestoreWriteType<TestMapField>;
   }
 >;
 
 export const getTestEntityFirestoreRepository = (firestore: firestore.Firestore) =>
-  getAdminFirestoreRepository<TestEntity, TestEntityWriteType>(TestEntity, firestore);
+  getAdminFirestoreRepository<TestEntity, FirestoreTestEntityWriteType>(TestEntity, firestore);

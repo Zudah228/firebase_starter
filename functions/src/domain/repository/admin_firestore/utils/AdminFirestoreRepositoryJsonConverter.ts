@@ -6,9 +6,11 @@ import { isDocumentReference, isGeoPoint, isObject, isTimestamp } from "./TypeGu
 
 /**
  * Firestore と JS の class を上手くデータのやり取りをさせるための class。
- * FirestoreRepository の class を分割したいときのために、抽象 class で定義させている。
  */
-export abstract class AdminFirestoreRepositoryJsonConverter<T> {
+export abstract class AdminFirestoreRepositoryJsonConverter<
+  T,
+  WriteType extends firestore.DocumentData = FirestoreWriteType<T>
+> {
   constructor(entityConstructor: ClassConstructor<T>) {
     entityConstructor;
     this.entityConstructor = entityConstructor;
@@ -19,15 +21,32 @@ export abstract class AdminFirestoreRepositoryJsonConverter<T> {
   /**
    * transaction で使用するために public に設定している。
    */
-  public toJson(item: Partial<FirestoreWriteType<T>>): Record<string, unknown> {
-    const objectGetters = this.extractAllGetters(item as Record<string, unknown>);
+  public toJson(item: Record<string, unknown>): Record<string, unknown> {
+    const objectGetters = this.extractAllGetters(item);
 
     const serializableObj = { ...item, ...objectGetters };
 
-    // undefined の削除
     Object.entries(serializableObj).forEach(([propertyKey, _]) => {
-      if (serializableObj[propertyKey] === undefined) {
+      const value = serializableObj[propertyKey];
+
+      // undefined: 削除
+      if (value === undefined) {
         delete serializableObj[propertyKey];
+      }
+      // 配列: 各要素に this.toJson() + undefined の削除
+      else if (Array.isArray(value)) {
+        serializableObj[propertyKey] = value
+          .map((e: unknown) => {
+            if (isObject(e)) {
+              return this.toJson(e);
+            }
+            return e;
+          })
+          .filter((e) => e !== undefined);
+      }
+      // object: this.toJson() の実行
+      else if (isObject(value)) {
+        serializableObj[propertyKey] = this.toJson(serializableObj[propertyKey] as Record<string, unknown>);
       }
     });
     return serializableObj;

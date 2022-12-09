@@ -3,24 +3,28 @@ import { ClassConstructor } from "class-transformer";
 import { firestore } from "firebase-admin";
 import { Firestore } from "firebase-admin/firestore";
 
-import { FirestoreDocument, FirestoreUpdateType, FirestoreWriteType, QueryBuilder } from "./types";
+import { FirestoreDocument, FirestoreDocumentReference, FirestoreWriteType, QueryBuilder } from "./types";
 import { AdminFirestoreRepositoryJsonConverter } from "./utils/AdminFirestoreRepositoryJsonConverter";
 
 /**
  * JavaScript の class と Firestore のデータをやり取りさせるためのクラス。
- *
  * Timestamp を Date に加工したりする。
  *
  * インスタンスを無駄に生成しないように、関数呼び出しの度に path を設定するようにしている。
  * path を class の static に設定するなど、path の変更容易性を担保すること。
  */
-export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonConverter<T> {
+export class AdminFirestoreRepository<
+  T,
+  WriteType extends firestore.DocumentData = FirestoreWriteType<T>
+> extends AdminFirestoreRepositoryJsonConverter<T, WriteType> {
   constructor(entityConstructor: ClassConstructor<T>, firestore: Firestore) {
     super(entityConstructor);
     this.firestore = firestore;
   }
 
   private firestore: Firestore;
+
+  // reference
 
   /**
    * transaction などで使用するために public に設定している。
@@ -41,6 +45,7 @@ export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonCon
   }
 
   // write
+
   /**
    * set でドキュメントを指定して保存。
    *
@@ -52,14 +57,12 @@ export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonCon
    * @param item
    * @param options
    */
-  public async set(documentPath: string, item: FirestoreWriteType<T>, options?: SetOptions): Promise<void> {
+  public async set(documentPath: string, item: WriteType, options?: SetOptions): Promise<void> {
     await this.getDocumentReference(documentPath).set(this.toJson(item), options ?? { merge: true });
   }
 
   /**
    * add で自動生成のドキュメントを作成。
-   *
-   * 返り値は生成した id
    *
    * バックグラウンド関数では、冪等性が担保されないため、あまり推奨しない。
    *
@@ -67,11 +70,11 @@ export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonCon
    * getter やその他関数は除外される。FieldValue の使用が可能。
    * @param collectionPath
    * @param item
-   * @returns {string} - 自動生成した id
+   * @returns {string} - 自動生成した id を含んだ DocumentReference
    */
-  public async add(collectionPath: string, item: FirestoreWriteType<T>): Promise<string> {
+  public async add(collectionPath: string, item: WriteType): Promise<FirestoreDocumentReference> {
     const ref = await this.firestore.collection(collectionPath).add(this.toJson(item));
-    return ref.id;
+    return ref;
   }
 
   /**
@@ -82,7 +85,7 @@ export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonCon
    * @param documentPath
    * @param item
    */
-  public async updateSomeField(documentPath: string, item: FirestoreUpdateType<T>): Promise<void> {
+  public async updateSomeField(documentPath: string, item: Partial<WriteType>): Promise<void> {
     await this.getDocumentReference(documentPath).update(this.toJson(item));
   }
 
@@ -95,6 +98,7 @@ export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonCon
   }
 
   // read
+
   /**
    * Timestamp は Date に変換される。
    * @param documentPath
@@ -137,12 +141,20 @@ export class AdminFirestoreRepository<T> extends AdminFirestoreRepositoryJsonCon
 }
 /**
  * クラスごとの AdminFirestoreRepository のインスタンス生成
+ *
+ * ### Type Param
+ * * T - やりとりする class 。
+ * * WriteType - デフォルトは FirestoreWriteType<T>。map を含むフィールドの場合、渡す必要がある。
+ *    * ex.)
+ *    *     type EntityWriteType = FirestoreWriteType<Omit<Entity, "mapField">> &
+ *    *       { mapField?: FirestoreWriteType<MapField> };
+ *
  * @param entityConstructor
  * @returns
  */
-export function getAdminFirestoreRepository<T>(
+export function getAdminFirestoreRepository<T, WriteType extends firestore.DocumentData = FirestoreWriteType<T>>(
   entityConstructor: ClassConstructor<T>,
   firestore: Firestore
-): AdminFirestoreRepository<T> {
-  return new AdminFirestoreRepository<T>(entityConstructor, firestore);
+): AdminFirestoreRepository<T, WriteType> {
+  return new AdminFirestoreRepository<T, WriteType>(entityConstructor, firestore);
 }

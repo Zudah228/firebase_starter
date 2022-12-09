@@ -94,6 +94,7 @@ module.exports = {
     "keyword-spacing": "warn",
     "no-empty": "warn",
     "space-before-function-paren": "off",
+    "brace-style": "off",
     "valid-jsdoc": [0],
     "require-jsdoc": [
       "warn",

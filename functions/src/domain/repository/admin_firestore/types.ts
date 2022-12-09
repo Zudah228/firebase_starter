@@ -6,10 +6,14 @@ export type FirestoreDocument<T> = { entity: T } & {
 };
 
 // write
-export type FirestoreWriteType<T> = {
-  [K in keyof T]: T[K] | firestore.FieldValue;
-};
-export type FirestoreUpdateType<T> = Partial<FirestoreWriteType<T>>;
+export type FirestoreWriteType<T> = Omit<
+  {
+    [K in keyof T]: T[K] | firestore.FieldValue;
+  },
+  {
+    [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
+  }[keyof T]
+>;
 
 export type QueryBuilder<T = firestore.DocumentData> = (
   getReference: (collectionPath: string) => firestore.CollectionReference<T>

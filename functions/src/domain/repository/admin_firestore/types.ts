@@ -11,6 +11,10 @@ export type FirestoreWriteType<T> = {
 };
 export type FirestoreUpdateType<T> = Partial<FirestoreWriteType<T>>;
 
+export type QueryBuilder<T = firestore.DocumentData> = (
+  getReference: (collectionPath: string) => firestore.CollectionReference<T>
+) => firestore.Query<T>;
+
 // Firestore の型をそのまま使用する
 export type FirestoreGeo = firestore.GeoPoint;
 export type FirestoreDocumentReference = firestore.DocumentReference;

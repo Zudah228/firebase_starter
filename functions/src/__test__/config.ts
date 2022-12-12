@@ -2,14 +2,15 @@ import * as fs from "fs";
 
 import { TestEnvironmentConfig } from "@firebase/rules-unit-testing";
 import * as dotenv from "dotenv";
-import { AppOptions } from "firebase-admin/app";
+import * as admin from "firebase-admin/app";
 
-const config = dotenv.config().parsed;
+const dotenvConfig = dotenv.config().parsed;
 
-const PROJECT_ID = config!.TEST_PROJECT_ID;
+const PROJECT_ID = dotenvConfig!.TEST_PROJECT_ID;
 
-const adminConfig: AppOptions = {
+const adminConfig: admin.AppOptions = {
   projectId: PROJECT_ID,
+  // storage の操作に、設定の必要がある
   storageBucket: `${PROJECT_ID}.appspot.com`,
 };
 

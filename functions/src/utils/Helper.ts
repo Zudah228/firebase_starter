@@ -23,11 +23,16 @@ export async function wait(milliseconds?: number) {
 /**
  * 配列を、渡された数字ごとに分割した二次元配列にする
  *
+ * ex.) const result = sliceByNumber(["a", "b", "c", "d"], 2)
+ *
+ * => [["a", "b"], ["c", "d"]]
+ *
+ *
  * @param array 分割する配列
- * @param number 個数
+ * @param {number} elementLength 二次元配列の要素の個数
  * @returns
  */
-export const sliceByNumber = <T>(array: T[], number: number): T[][] => {
-  const length = Math.ceil(array.length / number);
-  return new Array(length).fill(undefined).map((_, i) => array.slice(i * number, (i + 1) * number));
+export const sliceToTwoDimensionalArray = <T>(array: T[], elementLength: number): T[][] => {
+  const length = Math.ceil(array.length / elementLength);
+  return new Array(length).fill(undefined).map((_, i) => array.slice(i * elementLength, (i + 1) * elementLength));
 };

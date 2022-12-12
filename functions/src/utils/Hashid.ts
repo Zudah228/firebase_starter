@@ -3,6 +3,7 @@ import * as uuid from "uuid";
 
 /**
  * ランダムな文字列の生成
+ * バックグラウンド関数では、冪等性を担保する必要があるため、推奨しない。
  *
  * @param {"short" | "long"} type
  * @returns {string}
@@ -16,15 +17,3 @@ export function getHashid(type: "short" | "long" = "short"): string {
     return hashid.encode(1, 2, 3);
   }
 }
-
-/**
- * 配列を、指定した数字ごとの二次元配列に変換する
- *
- * @param {T[]} array
- * @param {number} number
- * @returns
- */
-export const sliceByNumber = <T>(array: T[], number: number): T[][] => {
-  const length = Math.ceil(array.length / number);
-  return new Array(length).fill(undefined).map((_, i) => array.slice(i * number, (i + 1) * number));
-};

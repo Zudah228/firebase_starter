@@ -1,4 +1,4 @@
-import { CryptoHelper } from "../../../utils/CryptoHelper";
+import { CryptoHelper } from "../../../../utils/CryptoHelper";
 
 describe("CryptoHelper のテスト", () => {
   test("正しい長さで生成できている", () => {

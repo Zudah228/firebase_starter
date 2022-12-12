@@ -1,9 +1,9 @@
 import { firestore } from "firebase-admin";
 
-import { getAdminFirestoreRepository } from "../../../../domain/repository/admin_firestore/AdminFirestoreRepository";
-import { FirestoreFieldValue } from "../../../../domain/repository/admin_firestore/FieldValue";
-import { OmitFunction } from "../../../../utils/ClassHelper";
-import { FirebaseUnitTest } from "../../../index";
+import { getAdminFirestoreRepository } from "../../../../../domain/repositories/admin_firestore/AdminFirestoreRepository";
+import { FirestoreFieldValue } from "../../../../../domain/repositories/admin_firestore/FieldValue";
+import { OmitFunction } from "../../../../../utils/ClassHelper";
+import { FirebaseUnitTest } from "../../../../index";
 import {
   getTestEntityFirestoreRepository,
   TestEntity,

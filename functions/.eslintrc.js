@@ -63,6 +63,7 @@ module.exports = {
       "warn",
       {
         code: 120,
+        ignoreStrings: true,
       },
     ],
     "no-irregular-whitespace": [

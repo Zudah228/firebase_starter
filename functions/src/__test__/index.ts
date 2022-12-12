@@ -13,11 +13,11 @@ import { getStorage } from "firebase-admin/storage";
 import {
   AdminCloudStorageRepository,
   getAdminCloudStorageRepository,
-} from "../domain/repository/admin_cloud_storage/AdminCloudStorageRepository";
+} from "../domain/repositories/admin_cloud_storage/AdminCloudStorageRepository";
 import {
   AdminFirebaseAuthRepository,
   getAdminAuthRepository,
-} from "../domain/repository/admin_firebase_auth/AdminFirebaseAuthRepository";
+} from "../domain/repositories/admin_firebase_auth/AdminFirebaseAuthRepository";
 import { testConfig } from "./config";
 
 // Todo: ユーザーの種類をあらかじめ入れられるようにする

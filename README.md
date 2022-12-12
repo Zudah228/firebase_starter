@@ -45,9 +45,37 @@ DATABASE_URL=https://${PROJECT_ID}-default-rtdb.firebaseio.com
 STORAGE_BUCKET=${PROJECT_ID}.appspot.com
 ```
 
+# ディレクトリ構成
+各ディレクトリの解説のリンク
+- [スクリプト](#スクリプト)
+- [テスト](#ユニットテスト)
+```md
+- functions/            ## Cloud Functions 関連
+  - __script__/         ### 単体で実行するスクリプトファイル。
+  - __test__/           ### ユニットテスト
+  - domain/             ### プロダクトのドメイン知識
+    - entities/         #### データモデル
+    - repositories/     #### 外部API(もしくは GCP)との連携
+  - presentation/       ### Cloud Functions に export する関数
+  - utils/              ### Helper 関数など
+
+- export/               # firebase emulator で使用する export
+
+- rules/                # firebase セキュリティルールなどのの設定ファイル
+
+- sh/                   # シェルスクリプト
+  - deploy_rule_file/
+  - firebase_emulator/
+  - import_rule_file/
+```
+
 ## スクリプト
 単発で実行するスクリプト。
-サービスアカウントキーを、`functions/src/__scripts__/service_account_keys/` に、 Project ID の名前で追加する。
+
+admin ユーザーの追加や、マスターデータの追加などに使用する。
+
+### 手順
+サービスアカウントキーを、`functions/src/__scripts__/service_account_keys/` に、 Project ID をファイル名として追加する。
 
 ```md
 functions/src/__scripts__
@@ -91,55 +119,38 @@ functions/src/__scripts__
     npm run test ${実行ファイルのパス}
     ```
 
-## tree
-### rules
+### ディレクトリ構造
+```md
+functions/src/__test__
+├── assets                   # Storage のテストなどに利用するファイル
+│   └── sample_image.png
+├── tests                    # テスト実行ファイル
+│   └── template             # 本テンプレート機能に関するテスト
+├── config.ts
+└── index.ts
 ```
-rules
-├── cors.json
-├── firestore.indexes.json
-├── firestore.rules
-└── storage.rules
-```
-### sh
-```
-sh
-├── deploy_rule
-│   ├── deploy_all_rules.sh
-│   ├── deploy_firestore_index.sh
-│   ├── deploy_firestore_rule.sh
-│   ├── deploy_storage_rule.sh
-│   └── set_storage_cors.sh
-├── firebase_emulator
-│   ├── start.sh
-│   ├── start_with_data_not_export.sh
-│   └── start_with_export.sh
-└── import_rules
-    └── import_firestore_index.sh
-```
-### functions
-```
-functions
-├── src
-│   ├── __scripts__
-│   ├── __test__
-│   ├── domain
-│   ├── presentation
-│   │   ├── auth_trigger
-│   │   ├── firestore_trigger
-│   │   │   └── index.ts
-│   │   ├── http
-│   │   │   └── index.ts
-│   │   ├── pub_sub
-│   │   │   └── index.ts
-│   │   └── index.ts
-│   ├── utils
-│   ├── config.ts
-│   └── index.ts
-│
-├── babel.config.js
-├── jest.config.js
-├── package-lock.json
-├── package.json
-├── tsconfig.dev.json
-└── tsconfig.json
+### 実装
+`functions/src/__test__/tests/template/` にある実装方法を参考にする。
+
+`functions/src/__test__/index.ts` にある、`FirebaseUnitTest class` を利用する。
+```ts
+describe("xxx に関するテスト", () => {
+  let firebaseUnitTest: FirebaseUnitTest;
+
+  const documentPath = TestEntity.documentPath;
+
+  beforeAll(async () => {
+    firebaseUnitTest = await FirebaseUnitTest.setUp();
+  });
+
+  afterEach(async () => {
+    await firebaseUnitTest.dispose();
+  });
+
+  test("xxxの成功", async () => {
+    // test
+    // ...
+    expect(data).toEqual(true);
+  })
+)
 ```

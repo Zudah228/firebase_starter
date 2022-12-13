@@ -1,11 +1,11 @@
 import { firestore } from "firebase-admin";
 
-import { getAdminFirestoreRepository } from "../../../domain/repository/admin_firestore/AdminFirestoreRepository";
+import { getAdminFirestoreRepository } from "../../../../domain/repositories/admin_firestore/AdminFirestoreRepository";
 import {
   FirestoreDocumentReference,
   FirestoreGeo,
   FirestoreWriteType,
-} from "../../../domain/repository/admin_firestore/types";
+} from "../../../../domain/repositories/admin_firestore/types";
 import { OmitFunction } from "../../../../utils/ClassHelper";
 
 /**
@@ -53,6 +53,8 @@ export class TestNestedClass {
     key2: string;
     key3?: string | undefined;
   };
+  readonly dateField?: Date;
+
   getFunction(_: unknown): string {
     return "function";
   }
@@ -65,8 +67,9 @@ export type TestMapField = {
 
 // Firestore
 export type FirestoreTestEntityWriteType = FirestoreWriteType<
-  Omit<TestEntity, "mapField"> & {
+  Omit<TestEntity, "mapField" | "classField"> & {
     mapField?: FirestoreWriteType<TestMapField>;
+    classField?: FirestoreWriteType<TestNestedClass>;
   }
 >;
 

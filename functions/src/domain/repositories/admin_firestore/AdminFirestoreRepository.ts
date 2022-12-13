@@ -16,7 +16,7 @@ import { AdminFirestoreRepositoryJsonConverter } from "./utils/AdminFirestoreRep
 export class AdminFirestoreRepository<
   T,
   WriteType extends firestore.DocumentData = FirestoreWriteType<T>
-> extends AdminFirestoreRepositoryJsonConverter<T, WriteType> {
+> extends AdminFirestoreRepositoryJsonConverter<T> {
   constructor(entityConstructor: ClassConstructor<T>, firestore: Firestore) {
     super(entityConstructor);
     this.firestore = firestore;

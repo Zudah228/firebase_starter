@@ -1,18 +1,16 @@
 import { ClassConstructor, plainToInstance } from "class-transformer";
 import { firestore } from "firebase-admin";
 
-import { FirestoreDocument, FirestoreWriteType } from "../types";
+import { FirestoreDocument } from "../types";
 import { isDocumentReference, isGeoPoint, isObject, isTimestamp } from "./TypeGuards";
 
+// Todo: fromJson で、class が class のインスタンスとして取得させる
 /**
- * Firestore と JS の class を上手くデータのやり取りをさせるための class。
+ * Firestore と JS の class を上手くデータのやり取りをさせるための class
+ * toJson と fromJson を提供する
  */
-export abstract class AdminFirestoreRepositoryJsonConverter<
-  T,
-  WriteType extends firestore.DocumentData = FirestoreWriteType<T>
-> {
+export abstract class AdminFirestoreRepositoryJsonConverter<T> {
   constructor(entityConstructor: ClassConstructor<T>) {
-    entityConstructor;
     this.entityConstructor = entityConstructor;
   }
 
@@ -83,7 +81,8 @@ export abstract class AdminFirestoreRepositoryJsonConverter<
 
   /**
    * Firestore 独自の型を、JavaScript の型に変換
-   * DocumentReference はそのまま
+   *
+   * firestore.DocumentReference、firestore.GeoPoint はそのまま
    *
    * @param obj param
    * @returns
@@ -99,7 +98,7 @@ export abstract class AdminFirestoreRepositoryJsonConverter<
       } else if (isDocumentReference(val)) {
         obj[key] = val;
       } else if (isObject(val)) {
-        this.encodeFirestoreTypes(val);
+        obj[key] = this.encodeFirestoreTypes(val);
       }
     });
     return obj;

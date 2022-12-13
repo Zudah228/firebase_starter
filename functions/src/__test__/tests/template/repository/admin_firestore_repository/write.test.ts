@@ -343,6 +343,7 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
       stringField: "string2",
     };
 
+    // あらかじめ保存
     await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
       await firestore.doc(documentPath).set(item);
     });
@@ -372,15 +373,19 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
       numberField: 0,
     };
 
+    // あらかじめ保存
     await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
       await firestore.doc(documentPath).set(item);
     });
+
+    // Repository 経由で削除
     await firebaseUnitTest.withAdminSdk(async (firestore) => {
       const testEntityRepository = getTestEntityFirestoreRepository(firestore);
 
       await testEntityRepository.delete(documentPath);
     });
 
+    // document が存在するか確認
     await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
       exists = (await firestore.doc(documentPath).get()).exists;
     });

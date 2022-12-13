@@ -71,8 +71,9 @@ STORAGE_BUCKET=${PROJECT_ID}.appspot.com
 
 ## スクリプト
 単発で実行するスクリプト。
-
 admin ユーザーの追加や、マスターデータの追加などに使用する。
+
+ディレクトリ: [functions/src/__script__](./functions/src/__script__/)
 
 ### 手順
 サービスアカウントキーを、`functions/src/__scripts__/service_account_keys/` に、 Project ID をファイル名として追加する。
@@ -87,7 +88,10 @@ functions/src/__scripts__
 
 
 ## ユニットテスト
-ディレクトリ: `functions/src/__test__`
+関数単体の動きを確認するテスト。
+firebase 関連のユニットテストは、firebase emulator を利用する。
+
+ディレクトリ: [functions/src/__test__](./functions/src/__test__/)
 
 ### 環境
 ```md

@@ -1,7 +1,6 @@
 {
   "projects": {
-    "default": "",
-    "dev": "",
+    "dev": "fir-starter-demo-b7c8d",
     "stg": "",
     "prod": ""
   }

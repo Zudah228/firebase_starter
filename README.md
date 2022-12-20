@@ -103,6 +103,9 @@ firebase 関連のユニットテストは、firebase emulator を利用する�
 
 # firebase-functions-test
 ^2.4.0
+
+# @firebase/rules-unit-testing
+^2.0.5
 ```
 ### 手順
 1. Firebase Emulator を起動

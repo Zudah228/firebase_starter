@@ -11,7 +11,7 @@ Firebase のテンプレート
 # 環境の構築
 ## グローバルの npm に firebase_tools の追加
 ```sh
-npm install -g firebase_tools@latest
+npm install -g firebase-tools@latest
 ```
 ## .firebaserc の設定
 これを設定しないと、firebase_tools 

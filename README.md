@@ -2,6 +2,10 @@
 
 Firebase のテンプレート
 
+Todo: 
+- [ ] workspace ファイルのリネーム
+- [ ] `.firebaserc` を、使用するプロジェクトIDに変更
+
 ### 環境
 ```md
 # Cloud Functions:

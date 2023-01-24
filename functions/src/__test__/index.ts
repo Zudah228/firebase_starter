@@ -9,6 +9,7 @@ import * as admin from "firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
+import { EventContext } from "firebase-functions";
 
 import {
   AdminCloudStorageRepository,
@@ -18,6 +19,7 @@ import {
   AdminFirebaseAuthRepository,
   getAdminAuthRepository,
 } from "../domain/repositories/admin_firebase_auth/AdminFirebaseAuthRepository";
+import { generateUuid } from "../utils/Uuid";
 import { testConfig } from "./config";
 
 // Todo: ユーザーの種類をあらかじめ入れられるようにする
@@ -124,6 +126,22 @@ export class FirebaseUnitTest {
    */
   public permissionDeniedTest(pr: Promise<unknown>): Promise<void> {
     return assertFails(pr);
+  }
+
+  /**
+   * Scheduler 関数を実行させるためのダミー context
+   *
+   * @param timestamp timestamp を設定したい場合。null の場合、現在時刻が入る
+   * @returns
+   */
+  public generateDummySchedulerContext(timestamp?: Date): EventContext<Record<string, string>> {
+    return {
+      timestamp: timestamp?.toISOString() ?? new Date().toISOString(),
+      eventId: generateUuid(),
+      eventType: "pubsub",
+      params: {},
+      resource: { name: "", service: "" },
+    };
   }
 
   /**

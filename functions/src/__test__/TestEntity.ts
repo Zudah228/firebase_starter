@@ -1,12 +1,12 @@
 import { firestore } from "firebase-admin";
 
-import { getAdminFirestoreRepository } from "../../../../domain/repositories/admin_firestore/AdminFirestoreRepository";
+import { getAdminFirestoreRepository } from "../domain/repositories/admin_firestore/AdminFirestoreRepository";
 import {
   FirestoreDocumentReference,
   FirestoreGeo,
   FirestoreWriteType,
-} from "../../../../domain/repositories/admin_firestore/types";
-import { OmitFunction } from "../../../../utils/ClassHelper";
+} from "../domain/repositories/admin_firestore/types";
+import { OmitFunction } from "../utils/ClassHelper";
 
 /**
  * テスト用の Entity クラス

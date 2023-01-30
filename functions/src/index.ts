@@ -20,3 +20,5 @@ getFirestore().settings({
 //   AuthTrigger,
 //   PubSub
 //  } from "./presentation/";
+
+export { testTrigger } from "./__test__/tests/template/functions/testEndpoint";

@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 /**
  * CloudFunctions で利用する関数
  */
-export class CloudFunctionsHelper {
+class CloudFunctionsHelper {
   private constructor() {}
 
   // Todo: ログの出力基準を明記
@@ -17,3 +17,5 @@ export class CloudFunctionsHelper {
    */
   static functionsLogger = functions.logger;
 }
+
+export const functionsLogger = CloudFunctionsHelper.functionsLogger;

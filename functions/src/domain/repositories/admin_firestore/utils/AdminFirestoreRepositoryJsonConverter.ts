@@ -9,7 +9,7 @@ import { isDocumentReference, isGeoPoint, isObject, isTimestamp } from "./TypeGu
  * Firestore と JS の class を上手くデータのやり取りをさせるための class
  * toJson と fromJson を提供する
  */
-export abstract class AdminFirestoreRepositoryJsonConverter<T> {
+export class AdminFirestoreRepositoryJsonConverter<T> {
   constructor(entityConstructor: ClassConstructor<T>) {
     this.entityConstructor = entityConstructor;
   }

@@ -1,7 +1,7 @@
 import { SetOptions } from "@google-cloud/firestore";
 import { ClassConstructor } from "class-transformer";
 import { firestore } from "firebase-admin";
-import { Firestore } from "firebase-admin/firestore";
+import { DocumentReference, Firestore } from "firebase-admin/firestore";
 
 import { FirestoreDocument, FirestoreDocumentReference, FirestoreWriteType, QueryBuilder } from "./types";
 import { AdminFirestoreRepositoryJsonConverter } from "./utils/AdminFirestoreRepositoryJsonConverter";
@@ -57,8 +57,9 @@ export class AdminFirestoreRepository<
    * @param item
    * @param options
    */
-  public async set(documentPath: string, item: WriteType, options?: SetOptions): Promise<void> {
-    await this.getDocumentReference(documentPath).set(this.toJson(item), options ?? { merge: true });
+  public async set(documentPath: string | DocumentReference, item: WriteType, options?: SetOptions): Promise<void> {
+    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    await ref.set(this.toJson(item), options ?? { merge: true });
   }
 
   /**
@@ -85,16 +86,18 @@ export class AdminFirestoreRepository<
    * @param documentPath
    * @param item
    */
-  public async updateSomeField(documentPath: string, item: Partial<WriteType>): Promise<void> {
-    await this.getDocumentReference(documentPath).update(this.toJson(item));
+  public async updateSomeField(documentPath: string | DocumentReference, item: Partial<WriteType>): Promise<void> {
+    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    await ref.update(this.toJson(item));
   }
 
   /**
    * ドキュメントの消去
    * @param documentPath
    */
-  public async delete(documentPath: string): Promise<void> {
-    await this.getDocumentReference(documentPath).delete();
+  public async delete(documentPath: string | DocumentReference): Promise<void> {
+    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    await ref.delete();
   }
 
   // read
@@ -104,8 +107,9 @@ export class AdminFirestoreRepository<
    * @param documentPath
    * @returns
    */
-  public async fetchDocument(documentPath: string): Promise<FirestoreDocument<T> | undefined> {
-    const snapshot = await this.getDocumentReference(documentPath).get();
+  public async fetchDocument(documentPath: string | DocumentReference): Promise<FirestoreDocument<T> | undefined> {
+    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    const snapshot = await ref.get();
     return this.fromSnapshot(snapshot);
   }
 
@@ -116,8 +120,9 @@ export class AdminFirestoreRepository<
    * @param documentPath
    * @returns
    */
-  public async exists(documentPath: string): Promise<boolean> {
-    const snapshot = await this.getDocumentReference(documentPath).get();
+  public async exists(documentPath: string | DocumentReference): Promise<boolean> {
+    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    const snapshot = await ref.get();
     return snapshot.exists;
   }
 

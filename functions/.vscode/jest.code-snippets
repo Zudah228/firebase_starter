@@ -1,0 +1,24 @@
+{
+  "Snippet: start test": {
+    "scope": "typescript",
+    "prefix": "jest",
+    "body": [
+        "describe(\"$1\", () => {",
+        "  let firebaseUnitTest: FirebaseUnitTest;",
+        "",
+        "  beforeAll(async () => {",
+        "    firebaseUnitTest = await FirebaseUnitTest.setUp();",
+        "  });",
+        "",
+        "  afterEach(async () => {",
+        "    await firebaseUnitTest.dispose();",
+        "  });",
+        "",
+        "  test(\"\", () => {",
+        "    $0",
+        "  })",
+        "});",
+        ""
+      ]
+  }
+}

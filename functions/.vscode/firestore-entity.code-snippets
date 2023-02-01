@@ -1,0 +1,48 @@
+{
+  "Snippet: Firestore Entity class": {
+    "scope": "typescript",
+    "prefix": ["entity"],
+    "description": "Create a Firestore Entity class",
+    "body": [
+      "import { Firestore } from \"firebase-admin/firestore\";",
+      "",
+      "import {",
+      "  AdminFirestoreRepository,",
+      "  getAdminFirestoreRepository,",
+      "} from \"@/domain/repositories/admin_firestore/AdminFirestoreRepository\";",
+      "import { OmitFunction } from \"@/utils/classHelper\";",
+      "",
+      "/**",
+      " *",
+      " */",
+      "export class ${TM_FILENAME_BASE} {",
+      "  static generate(param: OmitFunction<${TM_FILENAME_BASE}>): ${TM_FILENAME_BASE} {",
+      "    const instance = new ${TM_FILENAME_BASE}();",
+      "    Object.assign(instance, param);",
+      "    return instance;",
+      "  }",
+      "  id!: string;",
+      "  createdAt?: Date;",
+      "  updatedAt?: Date;",
+      "  $0",
+      "",
+      "  static collectionPath = \"\";",
+      "  static documentPath = \"\";",
+      "}",
+      "",
+      "export type ${TM_FILENAME_BASE}Repository = AdminFirestoreRepository<${TM_FILENAME_BASE}>;",
+      "",
+      "export function get${TM_FILENAME_BASE}Repository(firestore: Firestore): ${TM_FILENAME_BASE}Repository {",
+      "  return getAdminFirestoreRepository(${TM_FILENAME_BASE}, firestore);",
+      "}"
+    ]
+  },
+  "Snippet: Firestore Entity field": {
+    "scope": "typescript",
+    "prefix": ["field"],
+    "description": "Create a Firestore Entity class field",
+    "body": [
+      "$1${2|!,?|}: ${3};",
+    ]
+  },
+}

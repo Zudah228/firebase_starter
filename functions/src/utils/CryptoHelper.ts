@@ -1,4 +1,5 @@
 import { randomInt } from "crypto";
+
 /**
  * ランダムな数字の文字列を生成
  * Math.random() は暗号には向かない

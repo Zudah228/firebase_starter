@@ -1,6 +1,12 @@
+import betterModuleAlias from "better-module-alias";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
+
+// パスエイリアスの設定
+betterModuleAlias(`${__dirname}`, {
+  $src: "./",
+});
 
 initializeApp(functions.config().firebase);
 

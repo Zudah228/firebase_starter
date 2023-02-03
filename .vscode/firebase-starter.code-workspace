@@ -7,4 +7,9 @@
 			"path": "../",
 		},
 	],
+	"settings": {
+		"files.exclude": {
+			"functions": true
+		},
+	}
 }

@@ -1,0 +1,19 @@
+{
+  "Snippet: Destructuring assignment": {
+    "scope": "typescript",
+    "prefix": "const {} = ",
+    "body": [
+        "const { $2 } = $1;",
+        "",
+        "$0",
+      ]
+  },
+  "Snippet: export from": {
+    "scope": "typescript",
+    "prefix": "export { ",
+    "body": [
+        "export { $2 } from \"$1\";",
+        "$0",
+      ]
+  },
+}

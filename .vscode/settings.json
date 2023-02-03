@@ -1,7 +1,4 @@
 {
-  "files.exclude": {
-    "functions": true
-  },
   "cSpell.words": [
     "appspot",
     "firebaseapp",

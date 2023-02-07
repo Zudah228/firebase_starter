@@ -1,10 +1,10 @@
 import { Firestore, getFirestore } from "firebase-admin/firestore";
 import { Change, EventContext } from "firebase-functions/v1";
 
-import { endpoint } from "../../../../config";
-import { AdminFirestoreRepositoryJsonConverter } from "../../../../domain/repositories/admin_firestore/utils/AdminFirestoreRepositoryJsonConverter";
-import { FirestoreOnWriteTrigger } from "../../../../presentation/interfaces/FirestoreTrigger";
-import { TestEntity } from "../../../TestEntity";
+import { endpoint } from "$src/config";
+import { AdminFirestoreRepositoryJsonConverter } from "$src/domain/repositories/admin_firestore/utils/AdminFirestoreRepositoryJsonConverter";
+import { FirestoreOnWriteTrigger } from "$src/presentation/interfaces/FirestoreTrigger";
+import { TestEntity } from "$test/TestEntity";
 
 // Todo: テストの場合のみ、export する
 /** */

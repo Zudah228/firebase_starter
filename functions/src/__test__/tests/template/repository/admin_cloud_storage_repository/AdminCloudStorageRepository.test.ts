@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-import { FirebaseUnitTest } from "../../../..";
+import { FirebaseUnitTest } from "$test/index";
 
 describe("Admin Cloud Storage Repository のテスト", () => {
   let firebaseUnitTest: FirebaseUnitTest;

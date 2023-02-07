@@ -1,15 +1,15 @@
 import { firestore } from "firebase-admin";
 
-import { getAdminFirestoreRepository } from "../../../../../domain/repositories/admin_firestore/AdminFirestoreRepository";
-import { FirestoreFieldValue } from "../../../../../domain/repositories/admin_firestore/FieldValue";
-import { OmitFunction } from "../../../../../utils/ClassHelper";
-import { FirebaseUnitTest } from "../../../../index";
+import { getAdminFirestoreRepository } from "$src/domain/repositories/admin_firestore/AdminFirestoreRepository";
+import { FirestoreFieldValue } from "$src/domain/repositories/admin_firestore/FieldValue";
+import { OmitFunction } from "$src/utils/ClassHelper";
+import { FirebaseUnitTest } from "$test/index";
 import {
   getTestEntityFirestoreRepository,
   TestEntity,
   FirestoreTestEntityWriteType,
   TestNestedClass,
-} from "../../../../TestEntity";
+} from "$test/TestEntity";
 
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認

@@ -12,7 +12,8 @@
     "strictPropertyInitialization": true,
     "target": "es2022",
     "paths": {
-      "@/*": ["./src/*"]
+      "$src/*": ["./src/*"],
+      "$test/*": ["./src/__test__/*"]
     }
   },
   "ts-node": {

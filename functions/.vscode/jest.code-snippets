@@ -3,6 +3,8 @@
     "scope": "typescript",
     "prefix": "jest",
     "body": [
+        "import { FirebaseUnitTest } from \"$test/index\";",
+        "",
         "describe(\"$1\", () => {",
         "  let firebaseUnitTest: FirebaseUnitTest;",
         "",

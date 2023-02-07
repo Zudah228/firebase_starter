@@ -14,13 +14,13 @@ import { EventContext } from "firebase-functions";
 import {
   AdminCloudStorageRepository,
   getAdminCloudStorageRepository,
-} from "../domain/repositories/admin_cloud_storage/AdminCloudStorageRepository";
+} from "$src/domain/repositories/admin_cloud_storage/AdminCloudStorageRepository";
 import {
   AdminFirebaseAuthRepository,
   getAdminAuthRepository,
-} from "../domain/repositories/admin_firebase_auth/AdminFirebaseAuthRepository";
-import { generateUuid } from "../utils/Uuid";
-import { testConfig } from "./config";
+} from "$src/domain/repositories/admin_firebase_auth/AdminFirebaseAuthRepository";
+import { generateUuid } from "$src/utils/Uuid";
+import { testConfig } from "$test/config";
 
 // Todo: ユーザーの種類をあらかじめ入れられるようにする
 /**

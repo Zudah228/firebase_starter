@@ -1,9 +1,9 @@
 import { firestore } from "firebase-admin";
 
-import { getAdminFirestoreRepository } from "../../../../../domain/repositories/admin_firestore/AdminFirestoreRepository";
-import { OmitFunction } from "../../../../../utils/ClassHelper";
-import { FirebaseUnitTest } from "../../../../index";
-import { TestEntity } from "../../../../TestEntity";
+import { getAdminFirestoreRepository } from "$src/domain/repositories/admin_firestore/AdminFirestoreRepository";
+import { OmitFunction } from "$src/utils/ClassHelper";
+import { FirebaseUnitTest } from "$test/index";
+import { TestEntity } from "$test/TestEntity";
 
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認

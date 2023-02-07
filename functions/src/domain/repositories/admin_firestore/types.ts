@@ -15,9 +15,7 @@ export type FirestoreWriteType<T> = Omit<
   }[keyof T]
 >;
 
-export type QueryBuilder<T = firestore.DocumentData> = (
-  getReference: (collectionPath: string) => firestore.CollectionReference<T>
-) => firestore.Query<T>;
+export type QueryBuilder<T = firestore.DocumentData> = (query: firestore.Query<T>) => firestore.Query<T>;
 
 // Firestore の型をそのまま使用する
 export type FirestoreGeo = firestore.GeoPoint;

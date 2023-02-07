@@ -4,7 +4,7 @@ import { firestore } from "firebase-admin";
 import { FirestoreDocument } from "../types";
 import { isDocumentReference, isGeoPoint, isObject, isTimestamp } from "./TypeGuards";
 
-// Todo: fromJson で、class が class のインスタンスとして取得させる
+// Todo: fromJson で、class のフィールドが class のインスタンスとして取得させる
 /**
  * Firestore と JS の class を上手くデータのやり取りをさせるための class
  * toJson と fromJson を提供する

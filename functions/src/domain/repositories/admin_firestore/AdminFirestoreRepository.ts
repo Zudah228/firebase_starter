@@ -44,6 +44,15 @@ export class AdminFirestoreRepository<
     return this.firestore.collection(collectionPath);
   }
 
+  /**
+   * transaction で使用するために public に設定している。
+   * @param collectionId
+   * @returns
+   */
+  public getCollectionGroupReference(collectionId: string) {
+    return this.firestore.collectionGroup(collectionId);
+  }
+
   // write
 
   /**
@@ -127,14 +136,35 @@ export class AdminFirestoreRepository<
   }
 
   /**
-   * Collection、CollectionGroup の取得。
+   *
+   * Collection の取得。
    *
    * Timestamp は Date に変換される。
-   * @param query
+   * @param collectionPath
+   * @param queryBuilder
    * @returns
    */
-  public async fetchCollection(queryBuilder: QueryBuilder): Promise<FirestoreDocument<T>[]> {
-    const snapshot = await queryBuilder(this.getCollectionReference).get();
+  public async fetchCollection(collectionPath: string, queryBuilder: QueryBuilder): Promise<FirestoreDocument<T>[]> {
+    const snapshot = await queryBuilder(this.getCollectionReference(collectionPath)).get();
+
+    if (snapshot.docs.length === 0) {
+      return [];
+    }
+    return snapshot.docs.map((snapshot) => {
+      return this.fromSnapshot(snapshot);
+    });
+  }
+
+  /**
+   * CollectionGroup の取得。
+   *
+   * Timestamp は Date に変換される。
+   * @param collectionId
+   * @param queryBuilder
+   * @returns
+   */
+  public async fetchCollectionGroup(collectionId: string, queryBuilder: QueryBuilder): Promise<FirestoreDocument<T>[]> {
+    const snapshot = await queryBuilder(this.getCollectionGroupReference(collectionId)).get();
 
     if (snapshot.docs.length === 0) {
       return [];

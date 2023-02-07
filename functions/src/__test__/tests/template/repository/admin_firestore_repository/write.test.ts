@@ -9,7 +9,7 @@ import {
   TestEntity,
   FirestoreTestEntityWriteType,
   TestNestedClass,
-} from "../TestEntity";
+} from "../../../../TestEntity";
 
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認

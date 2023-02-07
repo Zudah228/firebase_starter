@@ -3,7 +3,7 @@ import { firestore } from "firebase-admin";
 import { getAdminFirestoreRepository } from "../../../../../domain/repositories/admin_firestore/AdminFirestoreRepository";
 import { OmitFunction } from "../../../../../utils/ClassHelper";
 import { FirebaseUnitTest } from "../../../../index";
-import { TestEntity } from "../TestEntity";
+import { TestEntity } from "../../../../TestEntity";
 
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認
@@ -22,7 +22,7 @@ describe("Admin Firestore Repository の読み取りテスト", () => {
     await firebaseUnitTest.dispose();
   });
 
-  test("プリミティブ型の読み取り", async () => {
+  test("プリミティブ型のドキュメント単体読み取り", async () => {
     let data: firestore.DocumentData | undefined;
 
     const item: OmitFunction<TestEntity> = {

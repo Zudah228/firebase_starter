@@ -7,8 +7,20 @@
  * @param {unknown} x
  * @return {boolean}
  */
-export function isNull(x: unknown): x is null | undefined {
+export function isNullOrUndefined(x: unknown): x is null | undefined {
   return x === undefined || x === null;
+}
+
+/**
+ * object のの判定
+ *
+ * null をブロックしている。
+ *
+ * @param x
+ * @returns
+ */
+export function isObject(x: unknown): x is Record<string, unknown> {
+  return x !== null && typeof x === "object";
 }
 
 /**

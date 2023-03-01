@@ -4,12 +4,12 @@ import * as functions from "firebase-functions";
 /**
  * CloudFunctions で利用する関数
  */
-class Logger {
+class FunctionsLogger {
   cloudFunctionsLogger = functions.logger;
 
-  static #instance = new Logger();
+  static #instance = new FunctionsLogger();
 
-  static getInstance(): Logger {
+  static getInstance(): FunctionsLogger {
     return this.#instance;
   }
 
@@ -27,4 +27,4 @@ class Logger {
   }
 }
 
-export const appLogger = Logger.getInstance();
+export const functionsLogger = FunctionsLogger.getInstance();

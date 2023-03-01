@@ -2,7 +2,7 @@ import { messaging } from "firebase-admin";
 import { Messaging } from "firebase-admin/lib/messaging/messaging";
 import { Message } from "firebase-admin/lib/messaging/messaging-api";
 
-import { appLogger } from "$src/utils/Logger";
+import { functionsLogger } from "$src/utils/Logger";
 
 export type FcmBatchMessage = messaging.Message;
 export type FcmBatchMessageContent = messaging.Notification;
@@ -32,7 +32,7 @@ export class FirebaseMessagingRepository {
         option
       );
     } catch (e) {
-      appLogger.error(e);
+      functionsLogger.error(e);
     }
   }
 
@@ -67,7 +67,7 @@ export class FirebaseMessagingRepository {
 
     const promises = msgs.map((ms) =>
       this.messaging.sendAll(ms).catch((e) => {
-        appLogger.error(e);
+        functionsLogger.error(e);
       })
     );
     await Promise.all(promises);
@@ -81,7 +81,7 @@ export class FirebaseMessagingRepository {
 
       await this.messaging.sendToTopic(topic, { notification: content }, option);
     } catch (e) {
-      appLogger.error(e);
+      functionsLogger.error(e);
       return;
     }
   }

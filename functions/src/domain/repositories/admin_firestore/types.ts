@@ -1,20 +1,16 @@
 import { firestore } from "firebase-admin";
+import { PartialWithFieldValue, WithFieldValue } from "firebase-admin/firestore";
+
+import { OmitFunction } from "$src/utils/ClassHelper";
 
 // read
-export type FirestoreDocument<T> = { entity: T } & {
-  ref: FirestoreDocumentReference;
-};
+export type FirestoreDocument<T> = { entity?: T; ref: FirestoreDocumentReference; exists: boolean };
+export type FirestoreQueryDocument<T> = { entity: T; ref: FirestoreDocumentReference };
 
 // write
-export type FirestoreWriteType<T> = Omit<
-  {
-    [K in keyof T]: T[K] | firestore.FieldValue;
-  },
-  {
-    [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
-  }[keyof T]
->;
+export type FirestoreWriteType<T> = OmitFunction<WithFieldValue<T>>;
 
+export type FirestoreUpdateType<T> = PartialWithFieldValue<T>;
 export type QueryBuilder<T = firestore.DocumentData> = (query: firestore.Query<T>) => firestore.Query<T>;
 
 // Firestore の型をそのまま使用する

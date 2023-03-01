@@ -1,9 +1,15 @@
 import { SetOptions } from "@google-cloud/firestore";
-import { ClassConstructor } from "class-transformer";
 import { firestore } from "firebase-admin";
 import { DocumentReference, Firestore } from "firebase-admin/firestore";
 
-import { FirestoreDocument, FirestoreDocumentReference, FirestoreWriteType, QueryBuilder } from "./types";
+import {
+  FirestoreDocument,
+  FirestoreDocumentReference,
+  FirestoreQueryDocument,
+  FirestoreUpdateType,
+  FirestoreWriteType,
+  QueryBuilder,
+} from "./types";
 import { AdminFirestoreRepositoryJsonConverter } from "./utils/AdminFirestoreRepositoryJsonConverter";
 
 /**
@@ -13,12 +19,9 @@ import { AdminFirestoreRepositoryJsonConverter } from "./utils/AdminFirestoreRep
  * インスタンスを無駄に生成しないように、関数呼び出しの度に path を設定するようにしている。
  * path を class の static に設定するなど、path の変更容易性を担保すること。
  */
-export class AdminFirestoreRepository<
-  T,
-  WriteType extends firestore.DocumentData = FirestoreWriteType<T>
-> extends AdminFirestoreRepositoryJsonConverter<T> {
-  constructor(entityConstructor: ClassConstructor<T>, firestore: Firestore) {
-    super(entityConstructor);
+export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConverter {
+  constructor(firestore: Firestore) {
+    super();
     this.firestore = firestore;
   }
 
@@ -66,9 +69,13 @@ export class AdminFirestoreRepository<
    * @param item
    * @param options
    */
-  public async set(documentPath: string | DocumentReference, item: WriteType, options?: SetOptions): Promise<void> {
+  public async set<T = firestore.DocumentData>(
+    documentPath: string | DocumentReference,
+    item: FirestoreWriteType<T> | FirestoreUpdateType<T>,
+    options?: SetOptions
+  ): Promise<void> {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
-    await ref.set(this.toJson(item), options ?? { merge: true });
+    await ref.set(this.toFirestore(item), options ?? { merge: true });
   }
 
   /**
@@ -82,8 +89,11 @@ export class AdminFirestoreRepository<
    * @param item
    * @returns {string} - 自動生成した id を含んだ DocumentReference
    */
-  public async add(collectionPath: string, item: WriteType): Promise<FirestoreDocumentReference> {
-    const ref = await this.firestore.collection(collectionPath).add(this.toJson(item));
+  public async add<T = firestore.DocumentData>(
+    collectionPath: string,
+    item: FirestoreWriteType<T>
+  ): Promise<FirestoreDocumentReference> {
+    const ref = await this.firestore.collection(collectionPath).add(this.toFirestore(item));
     return ref;
   }
 
@@ -95,9 +105,12 @@ export class AdminFirestoreRepository<
    * @param documentPath
    * @param item
    */
-  public async updateSomeField(documentPath: string | DocumentReference, item: Partial<WriteType>): Promise<void> {
+  public async updateSomeField<T = firestore.DocumentData>(
+    documentPath: string | DocumentReference,
+    item: FirestoreUpdateType<T>
+  ): Promise<void> {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
-    await ref.update(this.toJson(item));
+    await ref.update(this.toFirestore(item));
   }
 
   /**
@@ -116,7 +129,9 @@ export class AdminFirestoreRepository<
    * @param documentPath
    * @returns
    */
-  public async fetchDocument(documentPath: string | DocumentReference): Promise<FirestoreDocument<T> | undefined> {
+  public async fetchDocument<T = firestore.DocumentData>(
+    documentPath: string | DocumentReference
+  ): Promise<FirestoreDocument<T> | undefined> {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
     const snapshot = await ref.get();
     return this.fromSnapshot(snapshot);
@@ -144,7 +159,11 @@ export class AdminFirestoreRepository<
    * @param queryBuilder
    * @returns
    */
-  public async fetchCollection(collectionPath: string, queryBuilder: QueryBuilder): Promise<FirestoreDocument<T>[]> {
+  // eslint-disable-next-line max-len
+  public async fetchCollection<T = firestore.DocumentData>(
+    collectionPath: string,
+    queryBuilder: QueryBuilder
+  ): Promise<FirestoreQueryDocument<T>[]> {
     const snapshot = await queryBuilder(this.getCollectionReference(collectionPath)).get();
 
     if (snapshot.docs.length === 0) {
@@ -163,7 +182,10 @@ export class AdminFirestoreRepository<
    * @param queryBuilder
    * @returns
    */
-  public async fetchCollectionGroup(collectionId: string, queryBuilder: QueryBuilder): Promise<FirestoreDocument<T>[]> {
+  public async fetchCollectionGroup<T = firestore.DocumentData>(
+    collectionId: string,
+    queryBuilder: QueryBuilder
+  ): Promise<FirestoreQueryDocument<T>[]> {
     const snapshot = await queryBuilder(this.getCollectionGroupReference(collectionId)).get();
 
     if (snapshot.docs.length === 0) {
@@ -172,6 +194,30 @@ export class AdminFirestoreRepository<
     return snapshot.docs.map((snapshot) => {
       return this.fromSnapshot(snapshot);
     });
+  }
+
+  public bulkWriter(options?: firestore.BulkWriterOptions): firestore.BulkWriter {
+    return this.firestore.bulkWriter(options);
+  }
+
+  /**
+   * 指定したドキュメント/コレクション以下の階層の、ドキュメントやサブコレクションを全て削除する。
+   *
+   * functions で実装する場合、 タイムアウトに気をつけること。
+   * @param ref
+   * @param bulkWriter: 渡した場合、詳細なエラーを取得することができる。 → bulkWriter.onWriteError
+   */
+  public async recursiveDelete(
+    ref: string | firestore.DocumentReference | firestore.CollectionReference,
+    bulkWriter?: firestore.BulkWriter
+  ) {
+    if (typeof ref === "string") {
+      const firestoreRef =
+        ref.split("/").length % 2 === 0 ? this.getDocumentReference(ref) : this.getCollectionReference(ref);
+      await this.firestore.recursiveDelete(firestoreRef, bulkWriter);
+    } else {
+      await this.firestore.recursiveDelete(ref, bulkWriter);
+    }
   }
 }
 /**
@@ -187,9 +233,6 @@ export class AdminFirestoreRepository<
  * @param entityConstructor
  * @returns
  */
-export function getAdminFirestoreRepository<T, WriteType extends firestore.DocumentData = FirestoreWriteType<T>>(
-  entityConstructor: ClassConstructor<T>,
-  firestore: Firestore
-): AdminFirestoreRepository<T, WriteType> {
-  return new AdminFirestoreRepository<T, WriteType>(entityConstructor, firestore);
+export function getAdminFirestoreRepository(firestore: Firestore): AdminFirestoreRepository {
+  return new AdminFirestoreRepository(firestore);
 }

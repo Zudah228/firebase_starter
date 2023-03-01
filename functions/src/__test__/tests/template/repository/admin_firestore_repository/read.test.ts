@@ -1,6 +1,5 @@
 import { firestore } from "firebase-admin";
 
-import { getAdminFirestoreRepository } from "$src/domain/repositories/admin_firestore/AdminFirestoreRepository";
 import { OmitFunction } from "$src/utils/ClassHelper";
 import { FirebaseUnitTest } from "$test/index";
 import { TestEntity } from "$test/TestEntity";
@@ -38,10 +37,8 @@ describe("Admin Firestore Repository の読み取りテスト", () => {
     });
 
     // Repository 経由で取得
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getAdminFirestoreRepository(TestEntity, firestore);
-
-      data = await testEntityRepository.fetchDocument(documentPath);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      data = await firestoreRepository.fetchDocument(documentPath);
     });
 
     expect(data).toBeDefined();

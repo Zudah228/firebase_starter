@@ -1,6 +1,3 @@
-import { firestore } from "firebase-admin";
-
-import { getAdminFirestoreRepository } from "$src/domain/repositories/admin_firestore/AdminFirestoreRepository";
 import {
   FirestoreDocumentReference,
   FirestoreGeo,
@@ -72,6 +69,3 @@ export type FirestoreTestEntityWriteType = FirestoreWriteType<
     classField?: FirestoreWriteType<TestNestedClass>;
   }
 >;
-
-export const getTestEntityFirestoreRepository = (firestore: firestore.Firestore) =>
-  getAdminFirestoreRepository<TestEntity, FirestoreTestEntityWriteType>(TestEntity, firestore);

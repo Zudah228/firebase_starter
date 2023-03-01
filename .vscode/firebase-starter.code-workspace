@@ -11,5 +11,8 @@
 		"files.exclude": {
 			"functions": true
 		},
+		"jest.disabledWorkspaceFolders": [
+			"firebase_starter"
+		],
 	}
 }

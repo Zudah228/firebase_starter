@@ -7,7 +7,7 @@ import {
 } from "@firebase/rules-unit-testing";
 import * as admin from "firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { getFirestore, type Firestore } from "firebase-admin/firestore";
+import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 import { EventContext } from "firebase-functions";
 
@@ -19,6 +19,10 @@ import {
   AdminFirebaseAuthRepository,
   getAdminAuthRepository,
 } from "$src/domain/repositories/admin_firebase_auth/AdminFirebaseAuthRepository";
+import {
+  AdminFirestoreRepository,
+  getAdminFirestoreRepository,
+} from "$src/domain/repositories/admin_firestore/AdminFirestoreRepository";
 import { generateUuid } from "$src/utils/Uuid";
 import { testConfig } from "$test/config";
 
@@ -76,15 +80,16 @@ export class FirebaseUnitTest {
    */
   public withAdminSdk<T>(
     test: (
-      getFirestore: Firestore,
+      getFirestore: AdminFirestoreRepository,
       storageRepository: AdminCloudStorageRepository,
       authRepository: AdminFirebaseAuthRepository
     ) => Promise<void>
   ): Promise<void> {
     const storageRepository = getAdminCloudStorageRepository(getStorage());
     const authRepository = getAdminAuthRepository(getAuth());
+    const firestoreRepository = getAdminFirestoreRepository(getFirestore());
 
-    return test(getFirestore(), storageRepository, authRepository);
+    return test(firestoreRepository, storageRepository, authRepository);
   }
 
   /**

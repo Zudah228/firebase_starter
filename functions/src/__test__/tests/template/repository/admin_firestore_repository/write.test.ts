@@ -1,15 +1,10 @@
 import { firestore } from "firebase-admin";
 
-import { getAdminFirestoreRepository } from "$src/domain/repositories/admin_firestore/AdminFirestoreRepository";
 import { FirestoreFieldValue } from "$src/domain/repositories/admin_firestore/FieldValue";
+import { FirestoreWriteType } from "$src/domain/repositories/admin_firestore/types";
 import { OmitFunction } from "$src/utils/ClassHelper";
 import { FirebaseUnitTest } from "$test/index";
-import {
-  getTestEntityFirestoreRepository,
-  TestEntity,
-  FirestoreTestEntityWriteType,
-  TestNestedClass,
-} from "$test/TestEntity";
+import { TestEntity, TestNestedClass } from "$test/TestEntity";
 
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認
@@ -39,11 +34,10 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     };
 
     // Repository の使用
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getAdminFirestoreRepository(TestEntity, firestore);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
       const entity = new TestEntity(item);
 
-      await testEntityRepository.set(documentPath, entity);
+      await firestoreRepository.set<TestEntity>(documentPath, entity);
     });
 
     // 取得して確認
@@ -62,11 +56,10 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     const item: OmitFunction<TestEntity> = { arrayField: ["element1", "element2"] };
 
     // Repository の使用
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
       const entity = new TestEntity(item);
 
-      await testEntityRepository.set(documentPath, entity);
+      await firestoreRepository.set<TestEntity>(documentPath, entity);
     });
 
     // 取得して確認
@@ -85,11 +78,10 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     const item: OmitFunction<TestEntity> = { mapField: { key1: "value1", key2: "value2" } };
 
     // Repository の使用
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
       const entity = new TestEntity(item);
 
-      await testEntityRepository.set(documentPath, entity);
+      await firestoreRepository.set<TestEntity>(documentPath, entity);
     });
 
     // 取得して確認
@@ -105,7 +97,7 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
   test("各 FieldValue のテスト", async () => {
     let data: firestore.DocumentData | undefined;
 
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       stringField: "string",
       numberField: 0,
       arrayField: ["element1", "element2"],
@@ -116,13 +108,12 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     const unionToBePushed = "element3";
     const unionToBeRemoved = 2;
 
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
       // 初期値を挿入
-      await testEntityRepository.set(documentPath, item);
+      await firestoreRepository.set<TestEntity>(documentPath, item);
 
       // FieldValue で更新
-      await testEntityRepository.set(documentPath, {
+      await firestoreRepository.set<TestEntity>(documentPath, {
         stringField: FirestoreFieldValue.deleteFiled(),
         numberField: FirestoreFieldValue.increment(increment),
         arrayField: FirestoreFieldValue.arrayUnion(unionToBePushed),
@@ -149,7 +140,7 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     let data: firestore.DocumentData | undefined;
 
     // Map 内のフィールド x Map ではないフィールドの比較
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       dateField: FirestoreFieldValue.serverTimestamp(),
       mapField: {
         key1: "value1",
@@ -158,10 +149,8 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     };
 
     // Repository の使用
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      await testEntityRepository.set(documentPath, item);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      await firestoreRepository.set(documentPath, item);
     });
 
     // 取得して確認
@@ -187,14 +176,12 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
       },
     };
 
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       classField: new TestNestedClass(classField),
     };
     // Repository の使用
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      await testEntityRepository.set(documentPath, item);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      await firestoreRepository.set(documentPath, item);
     });
 
     // 取得して確認
@@ -220,14 +207,12 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     };
     const classArrayField = [classField, classField];
 
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       classArrayField: [new TestNestedClass(classField), new TestNestedClass(classField)],
     };
     // Repository の使用
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      await testEntityRepository.set(documentPath, item);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      await firestoreRepository.set<TestEntity>(documentPath, item);
     });
 
     // 取得して確認
@@ -245,14 +230,12 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
 
     const dateField = new Date();
 
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       dateField,
     };
 
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      await testEntityRepository.set(documentPath, item);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      await firestoreRepository.set(documentPath, item);
     });
     // 取得して確認
     await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
@@ -267,15 +250,14 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
   test("DocumentReference の保存", async () => {
     let data: firestore.DocumentData | undefined;
     let docRef: firestore.DocumentReference;
-    let item: FirestoreTestEntityWriteType;
+    let item: FirestoreWriteType<TestEntity>;
 
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-      docRef = testEntityRepository.getDocumentReference(documentPath);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      docRef = firestoreRepository.getDocumentReference(documentPath);
       item = {
         documentRefField: docRef,
       };
-      await testEntityRepository.set(documentPath, item);
+      await firestoreRepository.set<TestEntity>(documentPath, item);
     });
     // 取得して確認
     await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
@@ -292,14 +274,12 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
 
     const geoField = new firestore.GeoPoint(90, 135);
 
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       geoField,
     };
 
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      await testEntityRepository.set(documentPath, item);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      await firestoreRepository.set(documentPath, item);
     });
     // 取得して確認
     await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
@@ -316,10 +296,8 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     let addTestDocumentPath: firestore.DocumentReference;
     let exists: boolean;
 
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      addTestDocumentPath = await testEntityRepository.add("test", {
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      addTestDocumentPath = await firestoreRepository.add<TestEntity>("test", {
         stringField: "string",
       });
     });
@@ -334,12 +312,12 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
   test("updateSomeField で保存", async () => {
     let data: firestore.DocumentData | undefined;
 
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       stringField: "string1",
       numberField: 0,
     };
 
-    const updateMap: Partial<FirestoreTestEntityWriteType> = {
+    const updateMap: Partial<FirestoreWriteType<TestEntity>> = {
       stringField: "string2",
     };
 
@@ -348,10 +326,8 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
       await firestore.doc(documentPath).set(item);
     });
 
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      await testEntityRepository.updateSomeField(documentPath, updateMap);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      await firestoreRepository.updateSomeField<TestEntity>(documentPath, updateMap);
     });
 
     await firebaseUnitTest.withSecurityRulesDisabled(async (firestore) => {
@@ -368,7 +344,7 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
   test("delete で削除", async () => {
     let exists: boolean;
 
-    const item: FirestoreTestEntityWriteType = {
+    const item: FirestoreWriteType<TestEntity> = {
       stringField: "string1",
       numberField: 0,
     };
@@ -379,10 +355,8 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     });
 
     // Repository 経由で削除
-    await firebaseUnitTest.withAdminSdk(async (firestore) => {
-      const testEntityRepository = getTestEntityFirestoreRepository(firestore);
-
-      await testEntityRepository.delete(documentPath);
+    await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
+      await firestoreRepository.delete(documentPath);
     });
 
     // document が存在するか確認

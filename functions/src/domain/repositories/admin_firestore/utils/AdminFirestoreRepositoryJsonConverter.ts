@@ -1,25 +1,19 @@
-import { ClassConstructor, plainToInstance } from "class-transformer";
 import { firestore } from "firebase-admin";
 
-import { FirestoreDocument } from "../types";
+import { FirestoreDocument, FirestoreQueryDocument } from "../types";
 import { isDocumentReference, isGeoPoint, isObject, isTimestamp } from "./TypeGuards";
 
-// Todo: fromJson で、class のフィールドが class のインスタンスとして取得させる
 /**
  * Firestore と JS の class を上手くデータのやり取りをさせるための class
- * toJson と fromJson を提供する
+ *
+ * toFirestore と fromFirestore を提供する
  */
-export class AdminFirestoreRepositoryJsonConverter<T> {
-  constructor(entityConstructor: ClassConstructor<T>) {
-    this.entityConstructor = entityConstructor;
-  }
-
-  private entityConstructor: ClassConstructor<T>;
-
+export class AdminFirestoreRepositoryJsonConverter {
   /**
    * transaction で使用するために public に設定している。
    */
-  public toJson(item: Record<string, unknown>): Record<string, unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public toFirestore(item: any): Record<string, unknown> {
     const objectGetters = this.extractAllGetters(item);
 
     const serializableObj = { ...item, ...objectGetters };
@@ -36,7 +30,7 @@ export class AdminFirestoreRepositoryJsonConverter<T> {
         serializableObj[propertyKey] = value
           .map((e: unknown) => {
             if (isObject(e)) {
-              return this.toJson(e);
+              return this.toFirestore(e);
             }
             return e;
           })
@@ -51,7 +45,7 @@ export class AdminFirestoreRepositoryJsonConverter<T> {
       }
       // object: this.toJson() の実行
       else if (isObject(value)) {
-        serializableObj[propertyKey] = this.toJson(serializableObj[propertyKey] as Record<string, unknown>);
+        serializableObj[propertyKey] = this.toFirestore(serializableObj[propertyKey] as Record<string, unknown>);
       }
     });
     return serializableObj;
@@ -60,22 +54,25 @@ export class AdminFirestoreRepositoryJsonConverter<T> {
   /**
    * transaction 、バックグラウンド関数で取得した snapshot を加工するために、public にしている。
    */
-  public fromJson(data: firestore.DocumentData): T {
-    return plainToInstance<T, Record<string, unknown>>(this.entityConstructor, this.encodeFirestoreTypes(data));
+  public fromFirestore<T>(data: firestore.DocumentData): T {
+    return this.encodeFirestoreTypes(data) as T;
   }
 
-  protected fromSnapshot(snapshot: firestore.QueryDocumentSnapshot): FirestoreDocument<T>;
-  protected fromSnapshot(snapshot: firestore.DocumentSnapshot): FirestoreDocument<T> | undefined;
-
-  protected fromSnapshot(
+  protected fromSnapshot<T>(snapshot: firestore.QueryDocumentSnapshot): FirestoreQueryDocument<T>;
+  protected fromSnapshot<T>(snapshot: firestore.DocumentSnapshot): FirestoreDocument<T>;
+  protected fromSnapshot<T>(
     snapshot: firestore.QueryDocumentSnapshot | firestore.DocumentSnapshot
-  ): FirestoreDocument<T> | undefined {
-    if (!snapshot.exists) {
-      return undefined;
+  ): FirestoreDocument<T> | FirestoreQueryDocument<T> {
+    if (snapshot instanceof firestore.QueryDocumentSnapshot) {
+      return {
+        ref: snapshot.ref,
+        entity: this.fromFirestore<T>(snapshot.data()!),
+      };
     }
     return {
       ref: snapshot.ref,
-      entity: this.fromJson(snapshot.data()!),
+      entity: snapshot.exists ? this.fromFirestore<T>(snapshot.data()!) : undefined,
+      exists: snapshot.exists,
     };
   }
 

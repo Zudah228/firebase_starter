@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "../functions/"
+		},
+		{
+			"path": "../",
+		},
+	],
+	"settings": {
+		"files.exclude": {
+			"functions": true
+		},
+		"cSpell.words": [
+			"appspot",
+			"firebaseapp",
+			"firebaserc"
+		],
+		"jest.rootPath": "functions",
+		"jest.autoRun": "off",
+		"jest.disabledWorkspaceFolders": [
+			"functions"
+		],
+	}
+}

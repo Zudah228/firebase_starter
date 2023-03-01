@@ -2,9 +2,20 @@
 
 Firebase のテンプレート
 
-Todo: 
-- [ ] workspace ファイルのリネーム
+Todo:
+- [ ] workspace （`.vscode-workspace/firebase-starter.code-workspace`）ファイルのリネーム
 - [ ] `.firebaserc` を、使用するプロジェクトIDに変更
+    これを設定しないと、firebase_tools が動かない。
+    ```json
+    {
+      "projects": {
+        "dev": "${DEV_PROJECT_ID}",
+        "stg": "${STG_PROJECT_ID}",
+        "prod": "${PROD_PROJECT_ID}"
+      }
+    }
+    ```
+- [ ] README の firebase starter の文言を変更
 
 ### 環境
 ```md
@@ -16,17 +27,6 @@ Todo:
 ## グローバルの npm に firebase_tools の追加
 ```sh
 npm install -g firebase-tools@latest
-```
-## .firebaserc の設定
-これを設定しないと、firebase_tools 
-```json
-{
-  "projects": {
-    "dev": "${DEV_PROJECT_ID}",
-    "stg": "${STG_PROJECT_ID}",
-    "prod": "${PROD_PROJECT_ID}"
-  }
-}
 ```
 
 ## firebase 環境の設定
@@ -49,6 +49,9 @@ DATABASE_URL=https://${PROJECT_ID}-default-rtdb.firebaseio.com
 STORAGE_BUCKET=${PROJECT_ID}.appspot.com
 ```
 
+## vscode のワークスペースの確認
+`.vscode/` に、firebase-starter.code-workspace があるので、
+
 # ディレクトリ構成
 各ディレクトリの解説のリンク
 - [スクリプト](#スクリプト)
@@ -59,7 +62,7 @@ STORAGE_BUCKET=${PROJECT_ID}.appspot.com
   - __test__/           ### ユニットテスト
   - domain/             ### プロダクトのドメイン知識
     - entities/         #### データモデル
-    - repositories/     #### 外部API(もしくは GCP)との連携
+    - repositories/     #### テストでモック接続したい、外部API(もしくは GCP)との連携
   - presentation/       ### Cloud Functions に export する関数
   - utils/              ### Helper 関数など
 

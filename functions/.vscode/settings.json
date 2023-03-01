@@ -3,5 +3,4 @@
     "source.fixAll.eslint": true
   },
   "cSpell.words": ["appspot"],
-  "jest.autoRun": "off"
 }

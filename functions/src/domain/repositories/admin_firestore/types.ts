@@ -1,7 +1,7 @@
 import { firestore } from "firebase-admin";
 import { PartialWithFieldValue, WithFieldValue } from "firebase-admin/firestore";
 
-import { OmitFunction } from "$src/utils/ClassHelper";
+import { OmitFunction } from "$src/utils/TypeHelper";
 
 // read
 export type FirestoreDocument<T> = { entity?: T; ref: FirestoreDocumentReference; exists: boolean };

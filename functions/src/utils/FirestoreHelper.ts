@@ -17,9 +17,11 @@ export class FirestoreHelper {
     pathForTrigger: Path
   ): (params: CollectionParamsOf<Path>) => string {
     return (params): string => {
+      // 最後の Id を削除
       const paths = pathForTrigger.split("/");
       paths.pop();
       const path = paths.join("/") + "/";
+
       return this.fromParams(path, params);
     };
   }

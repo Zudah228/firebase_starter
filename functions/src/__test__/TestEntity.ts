@@ -3,7 +3,7 @@ import {
   FirestoreGeo,
   FirestoreWriteType,
 } from "$src/domain/repositories/admin_firestore/types";
-import { OmitFunction } from "$src/utils/ClassHelper";
+import { OmitFunction } from "$src/utils/TypeHelper";
 
 /**
  * テスト用の Entity クラス

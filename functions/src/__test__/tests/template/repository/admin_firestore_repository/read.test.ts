@@ -1,6 +1,6 @@
 import { firestore } from "firebase-admin";
 
-import { OmitFunction } from "$src/utils/ClassHelper";
+import { OmitFunction } from "$src/utils/TypeHelper";
 import { FirebaseUnitTest } from "$test/index";
 import { TestEntity } from "$test/TestEntity";
 

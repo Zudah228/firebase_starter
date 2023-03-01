@@ -27,6 +27,7 @@
     "firebase-functions": "^4.1.0",
     "hashids": "^2.2.10",
     "ts-node": "^10.9.1",
+    "ts-pattern": "^4.2.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

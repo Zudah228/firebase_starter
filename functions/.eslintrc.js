@@ -29,6 +29,7 @@ module.exports = {
     "no-console": ["warn", { allow: ["error", "warn", "info"] }],
     "no-debugger": "error",
     "generator-star-spacing": ["warn", { before: false, after: true }],
+    "@typescript-eslint/no-namespace": [0],
     "@typescript-eslint/no-empty-function": ["warn", { allow: ["private-constructors", "protected-constructors"] }],
     "prettier/prettier": [
       "warn",

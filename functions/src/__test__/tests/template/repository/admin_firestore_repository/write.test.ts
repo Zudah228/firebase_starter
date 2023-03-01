@@ -2,7 +2,7 @@ import { firestore } from "firebase-admin";
 
 import { FirestoreFieldValue } from "$src/domain/repositories/admin_firestore/FieldValue";
 import { FirestoreWriteType } from "$src/domain/repositories/admin_firestore/types";
-import { OmitFunction } from "$src/utils/ClassHelper";
+import { OmitFunction } from "$src/utils/TypeHelper";
 import { FirebaseUnitTest } from "$test/index";
 import { TestEntity, TestNestedClass } from "$test/TestEntity";
 

@@ -21,6 +21,25 @@ export async function wait(milliseconds?: number) {
 }
 
 /**
+ * never をアサインするための関数
+ * switch の抜け漏れ防止実装に利用
+ *
+ * type Animal = "cat" | "dog"
+ *
+ * switch (animal) {
+ *   case "cat":
+ *    break;
+ *   case "dog":
+ *    break;
+ *   default:
+ *    throw assertNever(animal);
+ * }
+ */
+export function assertNever(_: never) {
+  return new Error("This code should not be called");
+}
+
+/**
  * 配列を、渡された数字ごとに分割した二次元配列にする
  *
  * ex.) const result = sliceByNumber(["a", "b", "c", "d"], 2)

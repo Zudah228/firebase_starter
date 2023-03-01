@@ -2,7 +2,7 @@ import { messaging } from "firebase-admin";
 import { Messaging } from "firebase-admin/lib/messaging/messaging";
 import { Message } from "firebase-admin/lib/messaging/messaging-api";
 
-import { functionsLogger } from "$src/utils/Logger";
+import { functionsLogger } from "$src/utils/firebase/FunctionsLogger";
 
 export type FcmBatchMessage = messaging.Message;
 export type FcmBatchMessageContent = messaging.Notification;

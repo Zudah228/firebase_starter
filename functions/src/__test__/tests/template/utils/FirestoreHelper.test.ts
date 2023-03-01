@@ -1,4 +1,4 @@
-import { FirestoreHelper } from "$src/utils/FirestoreHelper";
+import { FirestoreHelper } from "$src/utils/firebase/FirestoreHelper";
 
 describe("FirestoreHelper のテスト", () => {
   const pathForTrigger = "collection_1/{collection_1_id}/collection_2/{collection_2_id}";

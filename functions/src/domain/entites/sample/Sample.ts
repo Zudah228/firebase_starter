@@ -1,4 +1,4 @@
-import { FirestoreHelper } from "$src/utils/FirestoreHelper";
+import { FirestoreHelper } from "$src/utils/firebase/FirestoreHelper";
 
 export interface Sample {
   id: string;

@@ -2,28 +2,31 @@
   "Snippet: Firestore Entity class": {
     "scope": "typescript",
     "prefix": ["entity"],
-    "description": "Create a Firestore Entity class",
+    "description": "Create a Firestore Entity interface",
     "body": [
+      "import { FirestoreHelper } from \"$$src/utils/firebase/FirestoreHelper\";",
+      "",
       "/**",
-      " * ",
+      " * $0",
       " */",
       "export interface ${TM_FILENAME_BASE} {",
       "  id!: string;",
       "  createdAt?: Date;",
       "  updatedAt?: Date;",
-      "  $0",
+      "  ",
       "}",
       "",
       "export namespace ${TM_FILENAME_BASE} {",
-      "  export const documentPathForTrigger = \"samples/{sampleId}\";",
+      "  export const documentPathForTrigger = \"/{${TM_FILENAME_BASE/(.*)/${1:/downcase}/}Id}\";",
       "  export const documentPath = FirestoreHelper.documentPathFunction(documentPathForTrigger);",
+      "  export const collectionPath = FirestoreHelper.collectionPathFunction(documentPathForTrigger);",
       "}",
     ]
   },
   "Snippet: Firestore Entity field": {
     "scope": "typescript",
     "prefix": ["field"],
-    "description": "Create a Firestore Entity class field",
+    "description": "Create a Firestore Entity interface field",
     "body": [
       "$1${2|!,?|}: ${3};",
     ]

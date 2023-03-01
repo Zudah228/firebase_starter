@@ -12,14 +12,9 @@ export function isNullOrUndefined(x: unknown): x is null | undefined {
 }
 
 /**
- * object のの判定
- *
- * null をブロックしている。
- *
- * @param x
- * @returns
+ * object であるかどうか。 null は許容しない
  */
-export function isObject(x: unknown): x is Record<string, unknown> {
+export function isObject(x: unknown): x is object {
   return x !== null && typeof x === "object";
 }
 

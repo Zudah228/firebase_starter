@@ -8,11 +8,11 @@ import { randomInt } from "crypto";
  * Node.js 16.x Crypto を使用して生成
  *  * https://nodejs.org/docs/latest-v16.x/api/crypto.html
  *
- * @param {number} length - 数字の長さ
- * @return {string}
  */
 export class CryptoHelper {
   /**
+   * Math.random() より安全なランダム数字を生成
+   *
    * @param {number} length - 数字の長さ
    * @return {string}
    */

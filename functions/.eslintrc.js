@@ -24,12 +24,25 @@ module.exports = {
     "jest.config.js",
     "babel.config.js",
   ],
-  plugins: ["@typescript-eslint", "import", "unused-imports", "prettier", "jsdoc"],
+  plugins: ["@typescript-eslint", "import", "unused-imports", "prettier", "jsdoc", "prefer-arrow"],
   rules: {
-    "no-console": ["warn", { allow: ["error", "warn", "info"] }],
+    // error rules
+    "prefer-arrow-callback": ["error", { allowUnboundThis: true }],
     "no-debugger": "error",
-    "generator-star-spacing": ["warn", { before: false, after: true }],
     "no-var": "error",
+    "no-irregular-whitespace": [
+      "error",
+      {
+        skipStrings: true,
+        skipComments: true,
+        skipRegExps: true,
+        skipTemplates: true,
+      },
+    ],
+
+    // warn rules
+    "no-console": ["warn", { allow: ["error", "warn", "info"] }],
+    "generator-star-spacing": ["warn", { before: false, after: true }],
     "prefer-const": "warn",
     "padded-blocks": [
       "off",
@@ -42,20 +55,12 @@ module.exports = {
     "no-trailing-spaces": "warn",
     indent: ["warn", 2],
     semi: ["warn", "always"],
+    "comma-spacing": "warn",
     "max-len": [
       "warn",
       {
         code: 120,
         ignoreStrings: true,
-      },
-    ],
-    "no-irregular-whitespace": [
-      "error",
-      {
-        skipStrings: true,
-        skipComments: true,
-        skipRegExps: true,
-        skipTemplates: true,
       },
     ],
     quotes: ["warn", "double"],
@@ -66,7 +71,9 @@ module.exports = {
     "brace-style": "off",
     capIsNew: 0,
     capIsNewExceptions: 0,
+    // jsdoc-plugin に設定を依存する
     "valid-jsdoc": [0],
+    "require-jsdoc": [0],
 
     // prettier
     "prettier/prettier": [
@@ -113,19 +120,18 @@ module.exports = {
     "jsdoc/require-jsdoc": [
       "warn",
       {
-        publicOnly: { esm: true, cjs: false },
+        publicOnly: { esm: true, cjs: true },
         require: {
-          ArrowFunctionExpression: true,
+          ArrowFunctionExpression: false,
           ClassDeclaration: true,
-          ClassExpression: true,
+          ClassExpression: false,
           FunctionDeclaration: false,
           FunctionExpression: false,
           MethodDefinition: false,
         },
-        contexts: ["PropertyDefinition", "TSInterfaceDeclaration"],
+        contexts: ["TSInterfaceDeclaration"],
       },
     ],
-
     "jsdoc/require-description": [
       "warn",
       {

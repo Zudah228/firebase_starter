@@ -13,7 +13,7 @@ export class AdminFirestoreRepositoryJsonConverter {
    * transaction で使用するために public に設定している。
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public toFirestore(item: any): Record<string, unknown> {
+  public toFirestore = (item: any): Record<string, unknown> => {
     const objectGetters = this.extractAllGetters(item);
 
     const serializableObj = { ...item, ...objectGetters };
@@ -49,14 +49,14 @@ export class AdminFirestoreRepositoryJsonConverter {
       }
     });
     return serializableObj;
-  }
+  };
 
   /**
    * transaction 、バックグラウンド関数で取得した snapshot を加工するために、public にしている。
    */
-  public fromFirestore<T>(data: firestore.DocumentData): T {
+  public fromFirestore = <T>(data: firestore.DocumentData): T => {
     return this.encodeFirestoreTypes(data) as T;
-  }
+  };
 
   protected fromSnapshot<T>(snapshot: firestore.QueryDocumentSnapshot): FirestoreQueryDocument<T>;
   protected fromSnapshot<T>(snapshot: firestore.DocumentSnapshot): FirestoreDocument<T>;
@@ -84,7 +84,7 @@ export class AdminFirestoreRepositoryJsonConverter {
    * @param obj param
    * @returns
    */
-  private encodeFirestoreTypes(obj: Record<string, unknown>) {
+  private encodeFirestoreTypes = (obj: Record<string, unknown>) => {
     Object.keys(obj).forEach((key) => {
       const val = obj[key];
       if (!obj[key]) return;
@@ -99,7 +99,7 @@ export class AdminFirestoreRepositoryJsonConverter {
       }
     });
     return obj;
-  }
+  };
 
   /**
    * ゲッターや関数を取り除く
@@ -107,7 +107,7 @@ export class AdminFirestoreRepositoryJsonConverter {
    * @param obj param
    * @returns
    */
-  private extractAllGetters(obj: Record<string, unknown>) {
+  private extractAllGetters = (obj: Record<string, unknown>) => {
     const prototype = Object.getPrototypeOf(obj);
     const fromInstanceObj = Object.keys(obj);
     const fromInstance = Object.getOwnPropertyNames(obj);
@@ -136,5 +136,5 @@ export class AdminFirestoreRepositoryJsonConverter {
       }
       return accumulator;
     }, {});
-  }
+  };
 }

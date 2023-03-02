@@ -11,18 +11,13 @@ export class AdminCloudStorageRepository {
 
   private storageBucket: Bucket;
 
-  /**
-   *
-   * @param {string} path - `images/sample.png`
-   * @param {string | Buffer} buffer
-   */
-  async save(path: string, buffer: string | Buffer): Promise<void> {
+  save = async (path: string, buffer: string | Buffer): Promise<void> => {
     await this.storageBucket.file(path).save(buffer);
-  }
+  };
 
-  async delete(path: string): Promise<void> {
+  delete = async (path: string): Promise<void> => {
     await this.storageBucket.file(path).delete();
-  }
+  };
 }
 
 export function getAdminCloudStorageRepository(storage: Storage, bucket?: string): AdminCloudStorageRepository {

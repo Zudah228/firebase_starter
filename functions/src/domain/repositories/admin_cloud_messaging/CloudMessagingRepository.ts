@@ -18,7 +18,7 @@ export class FirebaseMessagingRepository {
 
   private messaging: Messaging;
 
-  async sendToToken(token: string, content: FcmMessageContent, priority?: string): Promise<void> {
+  sendToToken = async (token: string, content: FcmMessageContent, priority?: string): Promise<void> => {
     try {
       const option = {
         priority: priority ?? "high",
@@ -34,7 +34,7 @@ export class FirebaseMessagingRepository {
     } catch (e) {
       functionsLogger.error(e);
     }
-  }
+  };
 
   maxBatchSize = 500;
 
@@ -44,7 +44,7 @@ export class FirebaseMessagingRepository {
    * @param messages
    * @returns
    */
-  async sendBatchToToken(messages: FcmBatchMessage[]): Promise<void> {
+  sendBatchToToken = async (messages: FcmBatchMessage[]): Promise<void> => {
     // sendAll() は 500以下までしか一気に送信できない
     // 500以下ならそのまま送信
     if (messages.length <= this.maxBatchSize) {
@@ -71,9 +71,9 @@ export class FirebaseMessagingRepository {
       })
     );
     await Promise.all(promises);
-  }
+  };
 
-  async sendToTopic(topic: string, content: FcmMessageContent, priority?: string): Promise<void> {
+  sendToTopic = async (topic: string, content: FcmMessageContent, priority?: string): Promise<void> => {
     try {
       const option = {
         priority: priority ?? "high",
@@ -84,7 +84,7 @@ export class FirebaseMessagingRepository {
       functionsLogger.error(e);
       return;
     }
-  }
+  };
 }
 
 export function getFirebaseMessagingRepository(messaging: Messaging) {

@@ -34,27 +34,27 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param documentPath
    * @returns
    */
-  public getDocumentReference(documentPath: string): firestore.DocumentReference {
+  public getDocumentReference = (documentPath: string): firestore.DocumentReference => {
     return this.firestore.doc(documentPath);
-  }
+  };
 
   /**
    * transaction で使用するために public に設定している。
    * @param collectionPath
    * @returns
    */
-  public getCollectionReference(collectionPath: string) {
+  public getCollectionReference = (collectionPath: string): firestore.CollectionReference => {
     return this.firestore.collection(collectionPath);
-  }
+  };
 
   /**
    * transaction で使用するために public に設定している。
    * @param collectionId
    * @returns
    */
-  public getCollectionGroupReference(collectionId: string) {
+  public getCollectionGroupReference = (collectionId: string): firestore.CollectionGroup => {
     return this.firestore.collectionGroup(collectionId);
-  }
+  };
 
   // write
 
@@ -69,14 +69,14 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param item
    * @param options
    */
-  public async set<T = firestore.DocumentData>(
+  public set = async <T = firestore.DocumentData>(
     documentPath: string | DocumentReference,
     item: FirestoreWriteType<T> | FirestoreUpdateType<T>,
     options?: SetOptions
-  ): Promise<void> {
+  ): Promise<void> => {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
     await ref.set(this.toFirestore(item), options ?? { merge: true });
-  }
+  };
 
   /**
    * add で自動生成のドキュメントを作成。
@@ -89,13 +89,13 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param item
    * @returns {string} - 自動生成した id を含んだ DocumentReference
    */
-  public async add<T = firestore.DocumentData>(
+  public add = async <T = firestore.DocumentData>(
     collectionPath: string,
     item: FirestoreWriteType<T>
-  ): Promise<FirestoreDocumentReference> {
+  ): Promise<FirestoreDocumentReference> => {
     const ref = await this.firestore.collection(collectionPath).add(this.toFirestore(item));
     return ref;
-  }
+  };
 
   /**
    * update で一部のフィールドのみを更新。
@@ -105,22 +105,22 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param documentPath
    * @param item
    */
-  public async updateSomeField<T = firestore.DocumentData>(
+  public updateSomeField = async <T = firestore.DocumentData>(
     documentPath: string | DocumentReference,
     item: FirestoreUpdateType<T>
-  ): Promise<void> {
+  ): Promise<void> => {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
     await ref.update(this.toFirestore(item));
-  }
+  };
 
   /**
    * ドキュメントの消去
    * @param documentPath
    */
-  public async delete(documentPath: string | DocumentReference): Promise<void> {
+  public delete = async (documentPath: string | DocumentReference): Promise<void> => {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
     await ref.delete();
-  }
+  };
 
   // read
 
@@ -129,13 +129,13 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param documentPath
    * @returns
    */
-  public async fetchDocument<T = firestore.DocumentData>(
+  public fetchDocument = async <T = firestore.DocumentData>(
     documentPath: string | DocumentReference
-  ): Promise<FirestoreDocument<T> | undefined> {
+  ): Promise<FirestoreDocument<T>> => {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
     const snapshot = await ref.get();
     return this.fromSnapshot(snapshot);
-  }
+  };
 
   /**
    * ドキュメントを Read して、存在の有無を確認する。
@@ -144,11 +144,11 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param documentPath
    * @returns
    */
-  public async exists(documentPath: string | DocumentReference): Promise<boolean> {
+  public exists = async (documentPath: string | DocumentReference): Promise<boolean> => {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
     const snapshot = await ref.get();
     return snapshot.exists;
-  }
+  };
 
   /**
    *
@@ -160,10 +160,10 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @returns
    */
   // eslint-disable-next-line max-len
-  public async fetchCollection<T = firestore.DocumentData>(
+  public fetchCollection = async <T = firestore.DocumentData>(
     collectionPath: string,
     queryBuilder: QueryBuilder
-  ): Promise<FirestoreQueryDocument<T>[]> {
+  ): Promise<FirestoreQueryDocument<T>[]> => {
     const snapshot = await queryBuilder(this.getCollectionReference(collectionPath)).get();
 
     if (snapshot.docs.length === 0) {
@@ -172,7 +172,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
     return snapshot.docs.map((snapshot) => {
       return this.fromSnapshot(snapshot);
     });
-  }
+  };
 
   /**
    * CollectionGroup の取得。
@@ -182,10 +182,10 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param queryBuilder
    * @returns
    */
-  public async fetchCollectionGroup<T = firestore.DocumentData>(
+  public fetchCollectionGroup = async <T = firestore.DocumentData>(
     collectionId: string,
     queryBuilder: QueryBuilder
-  ): Promise<FirestoreQueryDocument<T>[]> {
+  ): Promise<FirestoreQueryDocument<T>[]> => {
     const snapshot = await queryBuilder(this.getCollectionGroupReference(collectionId)).get();
 
     if (snapshot.docs.length === 0) {
@@ -194,11 +194,11 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
     return snapshot.docs.map((snapshot) => {
       return this.fromSnapshot(snapshot);
     });
-  }
+  };
 
-  public bulkWriter(options?: firestore.BulkWriterOptions): firestore.BulkWriter {
+  public bulkWriter = (options?: firestore.BulkWriterOptions): firestore.BulkWriter => {
     return this.firestore.bulkWriter(options);
-  }
+  };
 
   /**
    * 指定したドキュメント/コレクション以下の階層の、ドキュメントやサブコレクションを全て削除する。
@@ -207,10 +207,10 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param ref
    * @param bulkWriter: 渡した場合、詳細なエラーを取得することができる。 → bulkWriter.onWriteError
    */
-  public async recursiveDelete(
+  public recursiveDelete = async (
     ref: string | firestore.DocumentReference | firestore.CollectionReference,
     bulkWriter?: firestore.BulkWriter
-  ) {
+  ): Promise<void> => {
     if (typeof ref === "string") {
       const firestoreRef =
         ref.split("/").length % 2 === 0 ? this.getDocumentReference(ref) : this.getCollectionReference(ref);
@@ -218,20 +218,11 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
     } else {
       await this.firestore.recursiveDelete(ref, bulkWriter);
     }
-  }
+  };
 }
 /**
- * クラスごとの AdminFirestoreRepository のインスタンス生成
+ * AdminFirestoreRepository のインスタンス生成
  *
- * ### Type Param
- * * T - やりとりする class 。
- * * WriteType - デフォルトは FirestoreWriteType<T>。map を含むフィールドの場合、渡す必要がある。
- *    * ex.)
- *    *     type EntityWriteType = FirestoreWriteType<Omit<Entity, "mapField">> &
- *    *       { mapField?: FirestoreWriteType<MapField> };
- *
- * @param entityConstructor
- * @returns
  */
 export function getAdminFirestoreRepository(firestore: Firestore): AdminFirestoreRepository {
   return new AdminFirestoreRepository(firestore);

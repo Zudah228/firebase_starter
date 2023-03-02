@@ -14,20 +14,20 @@ export class AdminFirebaseAuthRepository {
 
   private auth: Auth;
 
-  async createUser(email: string, password: string): Promise<UserRecord> {
+  createUser = async (email: string, password: string): Promise<UserRecord> => {
     return await this.auth.createUser({
       email: email,
       emailVerified: false,
       password: password,
       disabled: false,
     });
-  }
+  };
 
-  async setCustomClaim(uid: string, customClaim: AuthCustomClaim): Promise<void> {
+  setCustomClaim = async (uid: string, customClaim: AuthCustomClaim): Promise<void> => {
     await this.auth.setCustomUserClaims(uid, customClaim);
-  }
+  };
 
-  async deleteAccount(uid: string): Promise<void> {
+  deleteAccount = async (uid: string): Promise<void> => {
     try {
       // ユーザーが取得できたら削除する
       await this.auth.getUser(uid);
@@ -35,15 +35,15 @@ export class AdminFirebaseAuthRepository {
       return;
     }
     await this.auth.deleteUser(uid);
-  }
+  };
 
-  async getUser(uid: string): Promise<UserRecord> {
+  getUser = (uid: string): Promise<UserRecord> => {
     return this.auth.getUser(uid);
-  }
+  };
 
-  async verifyIdToken(token: string): Promise<DecodedIdToken> {
+  verifyIdToken = (token: string): Promise<DecodedIdToken> => {
     return this.auth.verifyIdToken(token);
-  }
+  };
 }
 
 export function getAdminAuthRepository(auth: Auth): AdminFirebaseAuthRepository {

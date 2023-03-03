@@ -38,11 +38,12 @@ export abstract class HttpsCallable<Res> {
     return this.onCallBuilder(data, context);
   };
 
-  isAuthenticated(context: functions.CallableContext): context is functions.CallableContext & {
+  // eslint-disable-next-line prettier/prettier
+  isAuthenticated = (context: functions.CallableContext): context is functions.CallableContext & {
     auth: AuthData;
-  } {
+  } => {
     return context.auth !== undefined;
-  }
+  };
 
   protected generateError = (code: functions.FunctionsErrorCode, message: string, details?: unknown) =>
     new functions.HttpsError(code, message, details);

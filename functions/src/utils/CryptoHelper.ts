@@ -16,12 +16,12 @@ export class CryptoHelper {
    * @param {number} length - 数字の長さ
    * @return {string}
    */
-  static generateRandomNumber(length: number): string {
+  static generateRandomNumber = (length: number): string => {
     const num = randomInt(0, 10 ** length - 1);
     let zeroStr = "";
     for (let i = 1; i < length; i++) {
       zeroStr += "0";
     }
     return (zeroStr + `${num}`).slice(-1 * length);
-  }
+  };
 }

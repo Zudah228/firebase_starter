@@ -25,7 +25,7 @@ class ObjectDiffBuilder<T = any> {
 
 /** */
 class ObjectDiff<T, Keys extends FieldsOf<T>> {
-  diff(originalObj: object, updatedObj: object): Partial<ExtractKeys<T, Keys>> {
+  diff = (originalObj: object, updatedObj: object): Partial<ExtractKeys<T, Keys>> => {
     return deepObjectDiff.diff(originalObj, updatedObj) as Partial<ExtractKeys<T, Keys>>;
-  }
+  };
 }

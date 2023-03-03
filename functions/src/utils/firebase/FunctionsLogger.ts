@@ -9,22 +9,22 @@ class FunctionsLogger {
 
   static #instance = new FunctionsLogger();
 
-  static getInstance(): FunctionsLogger {
+  static getInstance = (): FunctionsLogger => {
     return this.#instance;
-  }
+  };
 
-  debug(...args: any[]) {
+  debug = (...args: any[]) => {
     this.cloudFunctionsLogger.debug(args);
-  }
-  info(...args: any[]) {
+  };
+  info = (...args: any[]) => {
     this.cloudFunctionsLogger.debug(args);
-  }
-  warn(...args: any[]) {
+  };
+  warn = (...args: any[]) => {
     this.cloudFunctionsLogger.debug(args);
-  }
-  error(...args: any[]) {
+  };
+  error = (...args: any[]) => {
     this.cloudFunctionsLogger.debug(args);
-  }
+  };
 }
 
 export const functionsLogger = FunctionsLogger.getInstance();

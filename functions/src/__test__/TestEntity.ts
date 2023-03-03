@@ -31,9 +31,9 @@ export class TestEntity {
 
   static documentPath = "test/doc";
 
-  getFunction(_: unknown): string {
+  getFunction = (_: unknown): string => {
     return "function";
-  }
+  };
 }
 
 /**
@@ -52,9 +52,9 @@ export class TestNestedClass {
   };
   readonly dateField?: Date;
 
-  getFunction(_: unknown): string {
+  getFunction = (_: unknown): string => {
     return "function";
-  }
+  };
 }
 
 export type TestMapField = {

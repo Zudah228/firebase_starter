@@ -5,11 +5,12 @@ import {
   RulesTestEnvironment,
   TokenOptions,
 } from "@firebase/rules-unit-testing";
-import * as admin from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 import { EventContext } from "firebase-functions";
+import * as clientSdkFirestore from "firebase/firestore";
 
 import {
   AdminCloudStorageRepository,
@@ -40,7 +41,7 @@ export class FirebaseUnitTest {
   /**
    * 非同期でコンストラクタに必要な値を取得
    */
-  static async setUp(): Promise<FirebaseUnitTest> {
+  static setUp = async (): Promise<FirebaseUnitTest> => {
     const testEnv = await initializeTestEnvironment(testConfig.emulatorConfig);
 
     // Firebase Admin sdk を emulator に接続
@@ -49,10 +50,10 @@ export class FirebaseUnitTest {
     process.env.FIREBASE_STORAGE_EMULATOR_HOST = "localhost:9199";
 
     // Firebase Admin sdk の初期化
-    admin.initializeApp(testConfig.adminConfig);
+    initializeApp(testConfig.adminConfig);
 
     return new FirebaseUnitTest(testEnv);
-  }
+  };
 
   /**
    * 非認証ユーザー
@@ -68,47 +69,48 @@ export class FirebaseUnitTest {
    * @param tokenOptions - カスタムトークン
    * @returns {RulesTestContext}
    */
-  public getAuthenticatedUser(uid: string, tokenOptions?: TokenOptions | undefined): RulesTestContext {
+  public getAuthenticatedUser = (uid: string, tokenOptions?: TokenOptions | undefined): RulesTestContext => {
     return this.#testEnv.authenticatedContext(uid, tokenOptions);
-  }
+  };
 
   /**
-   * Firebase Admin SDK
-   * Admin Firestore Repository の利用は、 getAdminFirestoreRepository に getFirestore() を渡す
+   * Firebase Admin SDK の Repository
+   *
    * @param test
    * @returns
    */
-  public withAdminSdk<T>(
+  public withAdminSdk = (
     test: (
-      getFirestore: AdminFirestoreRepository,
+      firestoreRepository: AdminFirestoreRepository,
       storageRepository: AdminCloudStorageRepository,
       authRepository: AdminFirebaseAuthRepository
     ) => Promise<void>
-  ): Promise<void> {
+  ): Promise<void> => {
     const storageRepository = getAdminCloudStorageRepository(getStorage());
     const authRepository = getAdminAuthRepository(getAuth());
     const firestoreRepository = getAdminFirestoreRepository(getFirestore());
 
     return test(firestoreRepository, storageRepository, authRepository);
-  }
+  };
 
   /**
    * ルール適応外テスト
    *
+   * firebase client sdk 準拠なので、admin-sdk の型は使用することができない
    *
    * コールバック内でしか行うことができない
    * > When using withSecurityRulesDisabled,
    * > make sure to perform all operations on the context within the callback function and return a Promise
    * > that resolves when the operations are done.
    */
-  public withSecurityRulesDisabled(
+  public withSecurityRulesDisabled = (
     test: (
       firestore: firebase.default.firestore.Firestore,
       storage: firebase.default.storage.Storage,
       database?: firebase.default.database.Database
     ) => void
-  ): Promise<void> {
-    return this.#testEnv.withSecurityRulesDisabled(async function (c) {
+  ): Promise<void> => {
+    return this.#testEnv.withSecurityRulesDisabled(async (c) => {
       let firestore: firebase.default.firestore.Firestore | undefined;
       let storage: firebase.default.storage.Storage | undefined;
       let database: firebase.default.database.Database | undefined;
@@ -121,7 +123,7 @@ export class FirebaseUnitTest {
       }
       return test(firestore!, storage!, database);
     });
-  }
+  };
 
   /**
    * 処理を失敗させるテスト
@@ -129,9 +131,9 @@ export class FirebaseUnitTest {
    * @param pr - 失敗させる処理
    * @returns {Promise<void>}
    */
-  public permissionDeniedTest(pr: Promise<unknown>): Promise<void> {
+  public permissionDeniedTest = (pr: Promise<unknown>): Promise<void> => {
     return assertFails(pr);
-  }
+  };
 
   /**
    * Scheduler 関数を実行させるためのダミー context
@@ -139,7 +141,7 @@ export class FirebaseUnitTest {
    * @param timestamp timestamp を設定したい場合。null の場合、現在時刻が入る
    * @returns
    */
-  public generateDummySchedulerContext(timestamp?: Date): EventContext<Record<string, string>> {
+  public generateDummySchedulerContext = (timestamp?: Date): EventContext<Record<string, string>> => {
     return {
       timestamp: timestamp?.toISOString() ?? new Date().toISOString(),
       eventId: generateUuid(),
@@ -147,22 +149,25 @@ export class FirebaseUnitTest {
       params: {},
       resource: { name: "", service: "" },
     };
-  }
+  };
 
   /**
-   * @param pr - 失敗させたい処理
-   * @returns {boolean} - true: 正常に失敗
+   * 処理を失敗させる
    */
-  public async causeError(pr: () => Promise<unknown>): Promise<boolean> {
+  public causeError = async (pr: () => Promise<unknown>): Promise<boolean> => {
     try {
       await pr();
       return false;
     } catch (e) {
       return true;
     }
-  }
+  };
 
-  async dispose(): Promise<void> {
+  public generateClientSdkGeoPoint = (latitude: number, longitude: number): clientSdkFirestore.GeoPoint => {
+    return new clientSdkFirestore.GeoPoint(latitude, longitude);
+  };
+
+  public dispose = async (): Promise<void> => {
     const promises: Promise<void>[] = [];
 
     // Firestore の削除
@@ -208,5 +213,5 @@ export class FirebaseUnitTest {
     promises.push(clearDatabase());
 
     await Promise.all(promises);
-  }
+  };
 }

@@ -1,6 +1,5 @@
 import { firestore } from "firebase-admin";
 
-import { FirestoreDocument, FirestoreQueryDocument } from "../types";
 import { isDocumentReference, isGeoPoint, isObject, isTimestamp } from "./TypeGuards";
 
 /**
@@ -58,24 +57,6 @@ export class AdminFirestoreRepositoryJsonConverter {
     return this.encodeFirestoreTypes(data) as T;
   };
 
-  protected fromSnapshot<T>(snapshot: firestore.QueryDocumentSnapshot): FirestoreQueryDocument<T>;
-  protected fromSnapshot<T>(snapshot: firestore.DocumentSnapshot): FirestoreDocument<T>;
-  protected fromSnapshot<T>(
-    snapshot: firestore.QueryDocumentSnapshot | firestore.DocumentSnapshot
-  ): FirestoreDocument<T> | FirestoreQueryDocument<T> {
-    if (snapshot instanceof firestore.QueryDocumentSnapshot) {
-      return {
-        ref: snapshot.ref,
-        entity: this.fromFirestore<T>(snapshot.data()!),
-      };
-    }
-    return {
-      ref: snapshot.ref,
-      entity: snapshot.exists ? this.fromFirestore<T>(snapshot.data()!) : undefined,
-      exists: snapshot.exists,
-    };
-  }
-
   /**
    * Firestore 独自の型を、JavaScript の型に変換
    *
@@ -84,7 +65,7 @@ export class AdminFirestoreRepositoryJsonConverter {
    * @param obj param
    * @returns
    */
-  private encodeFirestoreTypes = (obj: Record<string, unknown>) => {
+  private encodeFirestoreTypes = (obj: Record<string, unknown>): Record<string, unknown> => {
     Object.keys(obj).forEach((key) => {
       const val = obj[key];
       if (!obj[key]) return;

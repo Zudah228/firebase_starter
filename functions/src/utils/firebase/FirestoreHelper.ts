@@ -6,16 +6,16 @@ import { DropLast } from "$src/utils/TypeHelper";
  * Firebase SDK に関する Helper 関数
  */
 export class FirestoreHelper {
-  static documentPathFunction<Path extends string>(
+  static documentPathFunction = <Path extends string>(
     pathForTrigger: Path
-  ): (params: cloudFunctions.ParamsOf<Path>) => string {
+  ): ((params: cloudFunctions.ParamsOf<Path>) => string) => {
     return (params): string => {
       return this.fromParams(pathForTrigger, params);
     };
-  }
-  static collectionPathFunction<Path extends string>(
+  };
+  static collectionPathFunction = <Path extends string>(
     pathForTrigger: Path
-  ): (params: CollectionParamsOf<Path>) => string {
+  ): ((params: CollectionParamsOf<Path>) => string) => {
     return (params): string => {
       // 最後の Id を削除
       const paths = pathForTrigger.split("/");
@@ -24,9 +24,9 @@ export class FirestoreHelper {
 
       return this.fromParams(path, params);
     };
-  }
+  };
 
-  private static fromParams(path: string, params: Record<string, string>): string {
+  private static fromParams = (path: string, params: Record<string, string>): string => {
     const paramKeys = Object.keys(params);
     const paramValues = Object.values(params);
     if (paramKeys.length === 0) {
@@ -41,7 +41,7 @@ export class FirestoreHelper {
         return pre + curr;
       }
     });
-  }
+  };
 }
 
 /**

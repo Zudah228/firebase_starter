@@ -134,7 +134,11 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
   ): Promise<FirestoreDocument<T>> => {
     const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
     const snapshot = await ref.get();
-    return this.fromSnapshot(snapshot);
+    return {
+      ref: snapshot.ref,
+      exists: snapshot.exists,
+      entity: snapshot.exists ? this.fromFirestore(snapshot.data()!) : undefined,
+    };
   };
 
   /**
@@ -170,7 +174,11 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
       return [];
     }
     return snapshot.docs.map((snapshot) => {
-      return this.fromSnapshot(snapshot);
+      return {
+        ref: snapshot.ref,
+        exists: snapshot.exists,
+        entity: this.fromFirestore(snapshot.data()!),
+      };
     });
   };
 
@@ -191,8 +199,12 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
     if (snapshot.docs.length === 0) {
       return [];
     }
-    return snapshot.docs.map((snapshot) => {
-      return this.fromSnapshot(snapshot);
+    return snapshot.docs.map<FirestoreQueryDocument<T>>((snapshot) => {
+      return {
+        ref: snapshot.ref,
+        exists: snapshot.exists,
+        entity: this.fromFirestore(snapshot.data()!),
+      };
     });
   };
 

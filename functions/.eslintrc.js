@@ -27,7 +27,6 @@ module.exports = {
   plugins: ["@typescript-eslint", "import", "unused-imports", "prettier", "jsdoc", "prefer-arrow"],
   rules: {
     // error rules
-    "prefer-arrow-callback": ["error", { allowUnboundThis: true }],
     "no-debugger": "error",
     "no-var": "error",
     "no-irregular-whitespace": [
@@ -52,6 +51,8 @@ module.exports = {
         switches: "never",
       },
     ],
+    "no-multi-spaces": "warn",
+    "comma-dangle": "warn",
     "no-trailing-spaces": "warn",
     indent: ["warn", 2],
     semi: ["warn", "always"],
@@ -136,6 +137,17 @@ module.exports = {
       "warn",
       {
         contexts: ["PropertyDefinition", "TSInterfaceDeclaration"],
+      },
+    ],
+
+    // prefer-arrow
+    "prefer-arrow/prefer-arrow-functions": [
+      "error",
+      {
+        disallowPrototype: false,
+        singleReturnOnly: false,
+        classPropertiesAllowed: true,
+        allowStandaloneDeclarations: true,
       },
     ],
   },

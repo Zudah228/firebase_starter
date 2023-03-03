@@ -114,7 +114,7 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
 
       // FieldValue で更新
       await firestoreRepository.set<TestEntity>(documentPath, {
-        stringField: FirestoreFieldValue.deleteFiled(),
+        stringField: FirestoreFieldValue.delete(),
         numberField: FirestoreFieldValue.increment(increment),
         arrayField: FirestoreFieldValue.arrayUnion(unionToBePushed),
         anotherArrayField: FirestoreFieldValue.arrayRemove(unionToBeRemoved),

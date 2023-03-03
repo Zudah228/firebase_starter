@@ -5,7 +5,7 @@ import { OmitFunction } from "$src/utils/TypeHelper";
 
 // read
 export type FirestoreDocument<T> = { entity?: T; ref: FirestoreDocumentReference; exists: boolean };
-export type FirestoreQueryDocument<T> = { entity: T; ref: FirestoreDocumentReference };
+export type FirestoreQueryDocument<T> = { entity: T; ref: FirestoreDocumentReference; exists: boolean };
 
 // write
 export type FirestoreWriteType<T> = OmitFunction<WithFieldValue<T>>;

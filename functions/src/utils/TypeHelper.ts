@@ -14,5 +14,11 @@ type PickFunctionKeys<T> = {
 
 /**
  * Tuple 型の、最後の要素を削除する
+ *
+ * @example
+ * type Animal = ["cat" , "dog", "bird"]
+ *
+ * type DroppedAnimal = DropLast<Animal>
+ * //  -> ["cat" , "dog"]
  */
 export type DropLast<it extends any[]> = it extends readonly [...infer tail, any] ? tail : [];

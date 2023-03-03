@@ -4,9 +4,7 @@ import * as uuid from "uuid";
 /**
  * ランダムな文字列の生成
  * バックグラウンド関数では、冪等性を担保する必要があるため、推奨しない。
- * 
- * @example 87gHdC9
- * 
+ *
  * @param {"short" | "long"} hashType
  * @returns {string}
  */

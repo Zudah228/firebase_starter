@@ -1,8 +1,4 @@
-import {
-  FirestoreDocumentReference,
-  FirestoreGeo,
-  FirestoreWriteType,
-} from "$src/domain/repositories/admin_firestore/types";
+import { FirestoreDocumentReference, FirestoreGeo } from "$src/domain/repositories/admin_firestore/types";
 import { OmitFunction } from "$src/utils/TypeHelper";
 
 /**
@@ -61,11 +57,3 @@ export type TestMapField = {
   key1: string;
   key2: string;
 };
-
-// Firestore
-export type FirestoreTestEntityWriteType = FirestoreWriteType<
-  Omit<TestEntity, "mapField" | "classField"> & {
-    mapField?: FirestoreWriteType<TestMapField>;
-    classField?: FirestoreWriteType<TestNestedClass>;
-  }
->;

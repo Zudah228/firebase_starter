@@ -163,10 +163,20 @@ export class FirebaseUnitTest {
     }
   };
 
+  /**
+   * firebase-unit-testing のための GeoPoint を生成
+   *
+   * @param latitude
+   * @param longitude
+   * @returns
+   */
   public generateClientSdkGeoPoint = (latitude: number, longitude: number): clientSdkFirestore.GeoPoint => {
     return new clientSdkFirestore.GeoPoint(latitude, longitude);
   };
 
+  /**
+   * エミュレータの全てのデータを削除する
+   */
   public dispose = async (): Promise<void> => {
     const promises: Promise<void>[] = [];
 

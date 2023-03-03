@@ -6,6 +6,21 @@ import { DropLast } from "$src/utils/TypeHelper";
  * Firebase SDK に関する Helper 関数
  */
 export class FirestoreHelper {
+  /**
+   * firestore trigger に設定するパスの文字列から、関数を生成する
+   *
+   * @param {string} pathForTrigger - "users/{userId}"
+   *
+   * @example
+   * const pathForTrigger = "users/{userId}/posts/{postId}";
+   *
+   * const documentPath = FirestoreHelper.documentPathFunction(pathForTrigger)
+   *
+   * const userId = "user_1"
+   * const postId = "post_1"
+   *
+   * const ref = firestore.doc(documentPath({userId: userId, postId: postId }))
+   */
   static documentPathFunction = <Path extends string>(
     pathForTrigger: Path
   ): ((params: cloudFunctions.ParamsOf<Path>) => string) => {
@@ -13,6 +28,21 @@ export class FirestoreHelper {
       return this.fromParams(pathForTrigger, params);
     };
   };
+
+  /**
+   * firestore trigger に設定するパスの文字列から、関数を生成する
+   *
+   * @param {string} pathForTrigger - "users/{userId}"
+   *
+   * @example
+   * const pathForTrigger = "users/{userId}/posts/{postId}";
+   *
+   * const collectionPath = FirestoreHelper.collectionPathFunction(pathForTrigger)
+   *
+   * const userId = "user_1"
+   *
+   * const ref = firestore.collection(collectionPath({userId: userId, postId: postId }))
+   */
   static collectionPathFunction = <Path extends string>(
     pathForTrigger: Path
   ): ((params: CollectionParamsOf<Path>) => string) => {

@@ -1,9 +1,9 @@
 import { GeoPoint } from "firebase-admin/firestore";
 
+import { TestEntity } from "$src/__test__/TestEntity";
 import { FirestoreDocument, FirestoreWriteType } from "$src/domain/repositories/admin_firestore/types";
 import { OmitFunction } from "$src/utils/TypeHelper";
 import { FirebaseUnitTest } from "$test/index";
-import { TestEntity } from "$test/TestEntity";
 
 /**
  * AdminFirestoreRepository 経由で関数の実行 => パッケージの正規の使い方で確認

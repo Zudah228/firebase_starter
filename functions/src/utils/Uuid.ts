@@ -1,14 +1,16 @@
-import Hashids from "hashids/cjs/hashids";
+import Hashids from "hashids/cjs";
 import * as uuid from "uuid";
 
 /**
  * ランダムな文字列の生成
  * バックグラウンド関数では、冪等性を担保する必要があるため、推奨しない。
- *
+ * 
+ * @example 87gHdC9
+ * 
  * @param {"short" | "long"} hashType
  * @returns {string}
  */
-export function generateUuid(hashType?: "short" | "long"): string {
+export function generateHashid(hashType: "short" | "long" = "long"): string {
   const password = uuid.v4();
   if (hashType === undefined) {
     return password;
@@ -19,4 +21,14 @@ export function generateUuid(hashType?: "short" | "long"): string {
   } else {
     return hashid.encode(1, 2, 3);
   }
+}
+
+/**
+ * ランダムな文字列の生成
+ * バックグラウンド関数では、冪等性を担保する必要があるため、推奨しない。
+ *
+ * @returns {string}
+ */
+export function generateUuid(): string {
+  return uuid.v4();
 }

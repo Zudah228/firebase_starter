@@ -31,6 +31,7 @@ export async function wait(milliseconds?: number) {
  * never をアサインするための関数
  * switch の抜け漏れ防止実装に利用
  *
+ * @example
  * type Animal = "cat" | "dog"
  *
  * switch (animal) {

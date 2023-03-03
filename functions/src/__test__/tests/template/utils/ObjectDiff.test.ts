@@ -11,7 +11,7 @@ describe("ObjectDiff の動作テスト", () => {
       age: 20,
     };
 
-    const diff = objectDiff().keys(["age", "name"]).diff(objectA, objectB);
+    const diff = objectDiff<{ name: string; age: number }>().keys(["age", "name"]).diff(objectA, objectB);
 
     expect(Object.keys(diff).length).toBe(1);
     expect(diff).toMatchObject({ age: 20 });

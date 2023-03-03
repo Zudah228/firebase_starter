@@ -27,7 +27,7 @@ export class AdminFirebaseAuthRepository {
     await this.auth.setCustomUserClaims(uid, customClaim);
   };
 
-  deleteAccount = async (uid: string): Promise<void> => {
+  deleteUser = async (uid: string): Promise<void> => {
     try {
       // ユーザーが取得できたら削除する
       await this.auth.getUser(uid);

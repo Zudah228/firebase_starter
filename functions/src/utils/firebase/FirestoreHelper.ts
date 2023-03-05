@@ -25,7 +25,7 @@ export class FirestoreHelper {
     pathForTrigger: Path
   ): ((params: cloudFunctions.ParamsOf<Path>) => string) => {
     return (params): string => {
-      return this.fromParams(pathForTrigger, params);
+      return this.#fromParams(pathForTrigger, params);
     };
   };
 
@@ -52,13 +52,12 @@ export class FirestoreHelper {
       paths.pop();
       const path = paths.join("/") + "/";
 
-      return this.fromParams(path, params);
+      return this.#fromParams(path, params);
     };
   };
 
-  private static fromParams = (path: string, params: Record<string, string>): string => {
+  static #fromParams = (path: string, params: Record<string, string>): string => {
     const paramKeys = Object.keys(params);
-    const paramValues = Object.values(params);
     if (paramKeys.length === 0) {
       return path;
     }
@@ -66,7 +65,7 @@ export class FirestoreHelper {
 
     return splitPath.reduce((pre, curr, index) => {
       if (index % 2 === 1) {
-        return pre + paramValues[(index - 1) / 2];
+        return pre + params[paramKeys.find((v) => v === curr)!];
       } else {
         return pre + curr;
       }

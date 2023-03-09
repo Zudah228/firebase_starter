@@ -3,10 +3,14 @@ import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
 
+import { TIMEZONE } from "$src/config";
+
 // パスエイリアスの設定
 betterModuleAlias(`${__dirname}`, {
   $src: "./",
 });
+
+process.env.TZ = TIMEZONE;
 
 initializeApp(functions.config().firebase);
 

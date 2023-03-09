@@ -6,10 +6,11 @@ describe("Admin Cloud Storage Repository のテスト", () => {
   let firebaseUnitTest: FirebaseUnitTest;
 
   const filePath = "test/sample.png";
-  const buffer = fs.readFileSync(`${__dirname}/../../../assets/sample_image.png`);
+  let buffer: Buffer;
 
   beforeAll(async () => {
     firebaseUnitTest = await FirebaseUnitTest.setUp();
+    buffer = firebaseUnitTest.samplePngImage();
   });
 
   afterEach(async () => {

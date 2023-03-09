@@ -1,3 +1,5 @@
+import * as fs from "fs";
+
 import {
   assertFails,
   initializeTestEnvironment,
@@ -91,6 +93,15 @@ export class FirebaseUnitTest {
     const firestoreRepository = getAdminFirestoreRepository(getFirestore());
 
     return test(firestoreRepository, storageRepository, authRepository);
+  };
+
+  /**
+   * サンプル画像を取得
+   *
+   * 3種類が存在する
+   */
+  public samplePngImage = (number: "1" | "2" | "3" = "1"): Buffer => {
+    return fs.readFileSync(`${__dirname}/assets/sample_image_${number}.png`);
   };
 
   /**

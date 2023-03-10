@@ -21,6 +21,7 @@
       "  export const documentPath = FirestoreHelper.documentPathFunction(documentPathForTrigger);",
       "  export const collectionPath = FirestoreHelper.collectionPathFunction(documentPathForTrigger);",
       "}",
+      "",
     ]
   },
   "Snippet: Firestore Entity field": {

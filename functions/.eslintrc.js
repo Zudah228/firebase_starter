@@ -54,7 +54,7 @@ module.exports = {
     "no-multi-spaces": "warn",
     "comma-dangle": "warn",
     "no-trailing-spaces": "warn",
-    indent: ["warn", 2],
+    indent: ["warn", 2, { SwitchCase: 1 }],
     semi: ["warn", "always"],
     "comma-spacing": "warn",
     "max-len": [

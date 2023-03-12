@@ -56,6 +56,28 @@ export class FirestoreHelper {
     };
   };
 
+  /**
+   * "/" の重複を防止できる、パスの結合
+   *
+   * @example
+   * /// "/" が最後に含まれていない
+   * const rootPath = "users/uid";
+   * const subPath = "post/postId";
+   *
+   * const userPostDocumentPath = FirestoreHelper.mergePath(rootPath, subPath);
+   * /// * => "users/uid/post/postId"
+   * @example
+   * /// "/" が最後に含まれている
+   * const rootPath = "users/uid/";
+   * const subPath = "post/postId";
+   *
+   * const userPostDocumentPath = FirestoreHelper.mergePath(rootPath, subPath);
+   * /// * => "users/uid/post/postId"
+   */
+  static mergePath = (rootPath: string, subPath: string): string => {
+    return rootPath.endsWith("/") ? rootPath + subPath : rootPath + "/" + subPath;
+  };
+
   static #fromParams = (path: string, params: Record<string, string>): string => {
     const paramKeys = Object.keys(params);
     if (paramKeys.length === 0) {

@@ -19,6 +19,6 @@ type PickFunctionKeys<T> = {
  * type Animal = ["cat" , "dog", "bird"]
  *
  * type DroppedAnimal = DropLast<Animal>
- * //  -> ["cat" , "dog"]
+ * ///  -> ["cat" , "dog"]
  */
 export type DropLast<it extends any[]> = it extends readonly [...infer tail, any] ? tail : [];

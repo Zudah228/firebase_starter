@@ -5,17 +5,21 @@ describe("ObjectDiff の動作テスト", () => {
     const objectA = {
       name: "名前",
       age: 10,
+      nickname: "ニックネームA",
     };
     const objectB = {
       name: "名前",
       age: 20,
+      nickname: "ニックネームB",
     };
 
-    const diff = objectDiff<{ name: string; age: number }>().keys(["age", "name"]).diff(objectA, objectB);
-
-    expect(Object.keys(diff).length).toBe(1);
-    expect(diff).toMatchObject({ age: 20 });
-    expect(diff.name).toBeUndefined();
+    const diff = objectDiff<{ name: string; age: number; nickname: string }>().keys(["age"]).diff(objectA, objectB);
+    console.info(diff);
+    expect(diff).toEqual({ age: 20 });
+    // 存在しないはずの value が正しく undefined であることの確認
+    // 型的には存在しないことになっているが、ランタイム の JavaScript では存在している可能性があるので、as で型を矯正して確認している。
+    expect((diff as Record<string, unknown>).name).toBeUndefined();
+    expect((diff as Record<string, unknown>).nickname).toBeUndefined();
   });
   test("Date型の diff", () => {
     const now = new Date();

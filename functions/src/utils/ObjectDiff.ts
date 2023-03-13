@@ -19,13 +19,25 @@ type ExtractKeys<T, Keys extends FieldsOf<T>> = { [P in Extract<keyof T, Keys[nu
  */
 class ObjectDiffBuilder<T = any> {
   keys = <Keys extends FieldsOf<T>>(keys: Keys): ObjectDiff<T, Keys> => {
-    return new ObjectDiff<T, Keys>();
+    return new ObjectDiff<T, Keys>(keys);
   };
 }
 
 /** */
 class ObjectDiff<T, Keys extends FieldsOf<T>> {
+  constructor(private readonly keys: Keys) {}
+
   diff = (originalObj: object, updatedObj: object): Partial<ExtractKeys<T, Keys>> => {
-    return deepObjectDiff.diff(originalObj, updatedObj) as Partial<ExtractKeys<T, Keys>>;
+    return deepObjectDiff.diff(this.#extract(originalObj), this.#extract(updatedObj)) as Partial<ExtractKeys<T, Keys>>;
+  };
+
+  /**
+   * keys 飲みを抜き出す
+   */
+  #extract = (obj: object): object => {
+    const extractedEntries = Object.entries(obj).filter(([key, _]) => {
+      return (this.keys as string[]).includes(key);
+    });
+    return Object.fromEntries(extractedEntries);
   };
 }

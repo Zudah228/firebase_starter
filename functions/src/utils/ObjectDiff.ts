@@ -23,7 +23,9 @@ class ObjectDiffBuilder<T = any> {
   };
 }
 
-/** */
+/**
+ * deep object diff の実行
+ */
 class ObjectDiff<T, Keys extends FieldsOf<T>> {
   constructor(private readonly keys: Keys) {}
 

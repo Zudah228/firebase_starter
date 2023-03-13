@@ -29,12 +29,15 @@ class ObjectDiffBuilder<T = any> {
 class ObjectDiff<T, Keys extends FieldsOf<T>> {
   constructor(private readonly keys: Keys) {}
 
+  /**
+   * 違いがあった場合、第二引数の value が出力される
+   */
   diff = (originalObj: object, updatedObj: object): Partial<ExtractKeys<T, Keys>> => {
     return deepObjectDiff.diff(this.#extract(originalObj), this.#extract(updatedObj)) as Partial<ExtractKeys<T, Keys>>;
   };
 
   /**
-   * keys 飲みを抜き出す
+   * keys のみを抜き出す
    */
   #extract = (obj: object): object => {
     const extractedEntries = Object.entries(obj).filter(([key, _]) => {

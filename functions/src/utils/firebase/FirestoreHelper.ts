@@ -7,7 +7,7 @@ import { DropLast } from "$src/utils/TypeHelper";
  */
 export class FirestoreHelper {
   /**
-   * firestore trigger に設定するパスの文字列から、関数を生成する
+   * firestore trigger に設定するパスの文字列から、ドキュメントパスを生成するための、型安全な関数を生成する
    *
    * @param {string} pathForTrigger - "users/{userId}"
    *
@@ -30,7 +30,7 @@ export class FirestoreHelper {
   };
 
   /**
-   * firestore trigger に設定するパスの文字列から、関数を生成する
+   * firestore trigger に設定するパスの文字列から、コレクションパスを生成するための、型安全な関数を生成する
    *
    * @param {string} pathForTrigger - "users/{userId}"
    *
@@ -54,6 +54,17 @@ export class FirestoreHelper {
 
       return this.#fromParams(path, params);
     };
+  };
+
+  /**
+   * firestore trigger に設定するパスの文字列から、コレクショングループのIDを生成するための、型安全な関数を生成する
+   *
+   * @param {string} pathForTrigger - "users/{userId}"
+   */
+  static collectionId = <Path extends string>(pathForTrigger: Path): string => {
+    const pathValues = pathForTrigger.split("/");
+    const index = pathForTrigger.endsWith("/") ? pathValues.length - 3 : pathValues.length - 2;
+    return pathValues[index];
   };
 
   /**

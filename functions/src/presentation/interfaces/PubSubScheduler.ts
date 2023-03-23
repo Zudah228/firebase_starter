@@ -14,8 +14,6 @@ export abstract class PubSubScheduler {
    *   * https://cloud.google.com/appengine/docs/standard/python/config/cronref#formatting_the_PubSubscheduler
    */
   abstract PubSubScheduler: string;
-  /**
-   * arrow 関数で実装
-   */
+
   abstract onRun: (context: SchedulerContext) => Promise<void>;
 }

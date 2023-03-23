@@ -72,6 +72,7 @@ module.exports = {
     "brace-style": "off",
     capIsNew: 0,
     capIsNewExceptions: 0,
+    "operator-linebreak": ["warn", "after", { overrides: { "?": "before", ":": "before" } }],
     // jsdoc-plugin に設定を依存する
     "valid-jsdoc": [0],
     "require-jsdoc": [0],

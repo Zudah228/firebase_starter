@@ -34,7 +34,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param documentPath
    * @returns
    */
-  public getDocumentReference = (documentPath: string): firestore.DocumentReference => {
+  public documentReference = (documentPath: string): firestore.DocumentReference => {
     return this.firestore.doc(documentPath);
   };
 
@@ -43,7 +43,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param collectionPath
    * @returns
    */
-  public getCollectionReference = (collectionPath: string): firestore.CollectionReference => {
+  public collectionReference = (collectionPath: string): firestore.CollectionReference => {
     return this.firestore.collection(collectionPath);
   };
 
@@ -52,7 +52,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param collectionId
    * @returns
    */
-  public getCollectionGroupReference = (collectionId: string): firestore.CollectionGroup => {
+  public collectionGroupReference = (collectionId: string): firestore.CollectionGroup => {
     return this.firestore.collectionGroup(collectionId);
   };
 
@@ -74,7 +74,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
     item: FirestoreWriteType<T> | FirestoreUpdateType<T>,
     options?: SetOptions
   ): Promise<void> => {
-    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    const ref = typeof documentPath === "string" ? this.documentReference(documentPath) : documentPath;
     await ref.set(this.toFirestore(item), options ?? { merge: true });
   };
 
@@ -109,7 +109,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
     documentPath: string | DocumentReference,
     item: FirestoreUpdateType<T>
   ): Promise<void> => {
-    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    const ref = typeof documentPath === "string" ? this.documentReference(documentPath) : documentPath;
     await ref.update(this.toFirestore(item));
   };
 
@@ -118,7 +118,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param documentPath
    */
   public delete = async (documentPath: string | DocumentReference): Promise<void> => {
-    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    const ref = typeof documentPath === "string" ? this.documentReference(documentPath) : documentPath;
     await ref.delete();
   };
 
@@ -132,7 +132,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
   public fetchDocument = async <T = firestore.DocumentData>(
     documentPath: string | DocumentReference
   ): Promise<FirestoreDocument<T>> => {
-    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    const ref = typeof documentPath === "string" ? this.documentReference(documentPath) : documentPath;
     const snapshot = await ref.get();
     return {
       ref: snapshot.ref,
@@ -149,7 +149,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @returns
    */
   public exists = async (documentPath: string | DocumentReference): Promise<boolean> => {
-    const ref = typeof documentPath === "string" ? this.getDocumentReference(documentPath) : documentPath;
+    const ref = typeof documentPath === "string" ? this.documentReference(documentPath) : documentPath;
     const snapshot = await ref.get();
     return snapshot.exists;
   };
@@ -163,12 +163,11 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
    * @param queryBuilder
    * @returns
    */
-  // eslint-disable-next-line max-len
   public fetchCollection = async <T = firestore.DocumentData>(
     collectionPath: string,
     queryBuilder: QueryBuilder
   ): Promise<FirestoreQueryDocument<T>[]> => {
-    const snapshot = await queryBuilder(this.getCollectionReference(collectionPath)).get();
+    const snapshot = await queryBuilder(this.collectionReference(collectionPath)).get();
 
     if (snapshot.docs.length === 0) {
       return [];
@@ -194,7 +193,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
     collectionId: string,
     queryBuilder: QueryBuilder
   ): Promise<FirestoreQueryDocument<T>[]> => {
-    const snapshot = await queryBuilder(this.getCollectionGroupReference(collectionId)).get();
+    const snapshot = await queryBuilder(this.collectionGroupReference(collectionId)).get();
 
     if (snapshot.docs.length === 0) {
       return [];
@@ -225,7 +224,7 @@ export class AdminFirestoreRepository extends AdminFirestoreRepositoryJsonConver
   ): Promise<void> => {
     if (typeof ref === "string") {
       const firestoreRef =
-        ref.split("/").length % 2 === 0 ? this.getDocumentReference(ref) : this.getCollectionReference(ref);
+        ref.split("/").length % 2 === 0 ? this.documentReference(ref) : this.collectionReference(ref);
       await this.firestore.recursiveDelete(firestoreRef, bulkWriter);
     } else {
       await this.firestore.recursiveDelete(ref, bulkWriter);

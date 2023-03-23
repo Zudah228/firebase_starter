@@ -253,7 +253,7 @@ describe("Admin Firestore Repository の書き込みテスト", () => {
     let item: FirestoreWriteType<TestEntity>;
 
     await firebaseUnitTest.withAdminSdk(async (firestoreRepository) => {
-      docRef = firestoreRepository.getDocumentReference(documentPath);
+      docRef = firestoreRepository.documentReference(documentPath);
       item = {
         documentRefField: docRef,
       };

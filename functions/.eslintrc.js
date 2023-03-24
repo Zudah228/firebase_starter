@@ -70,8 +70,12 @@ module.exports = {
     "keyword-spacing": "warn",
     "no-empty": "warn",
     "operator-linebreak": ["warn", "after", { overrides: { "?": "before", ":": "before" } }],
+    // スペースに関する警告は、prettier に任せる。
     "space-before-function-paren": "off",
+    "space-before-blocks": "off",
+    "array-bracket-spacing": "off",
     "brace-style": "off",
+
     capIsNew: 0,
     capIsNewExceptions: 0,
     // jsdoc-plugin に設定を依存する
@@ -143,13 +147,24 @@ module.exports = {
     ],
 
     // prefer-arrow
-    // eslint デフォルトの prefer-arrow-callback では、クラスメソッドを矯正できないので、プラグインを使用している
+    // アロー関数を強制させるために導入
+    // eslint デフォルトの prefer-arrow-callback では、クラスメソッドを強制できないので、プラグインを使用している
     "prefer-arrow/prefer-arrow-functions": [
       "error",
+
+      // 個人による作成で、思わぬ挙動が多いので、デフォルト値であっても、全てのオプションを明示的に定義している
+      // https://github.com/TristonJ/eslint-plugin-prefer-arrow#configuration
       {
         disallowPrototype: false,
+        // true にすれば、このルールを、return １行のみの関数にだけ適応させるようにするオプション
+        //   👎 : function () { return 1; }
+        //   👍 : () => 1
+        // これを true にすると、他のオプションが上書きされるので false に設定する。
         singleReturnOnly: false,
+        // このプラグインを導入する理由。クラスメソッドの定義をアロー関数に強制する。
         classPropertiesAllowed: true,
+        // グローバル定義の場合、アロー関数を矯正するかどうか。
+        // グローバルでは、可読性のため、function 定義を推奨したいので true。
         allowStandaloneDeclarations: true,
       },
     ],

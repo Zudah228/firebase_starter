@@ -59,9 +59,10 @@ export function assertNever(_: never) {
  * @param {number} elementLength 二次元配列の要素の個数
  * @returns
  */
-export const sliceToTwoDimensionalArray = <T>(array: T[], elementLength: number): T[][] => {
+export function sliceToTwoDimensionalArray<T>(array: T[], elementLength: number): T[][] {
   const length = Math.ceil(array.length / elementLength);
+
   return new Array(length).fill(undefined).map((_, i) => {
     return array.slice(i * elementLength, (i + 1) * elementLength);
   });
-};
+}

@@ -27,6 +27,7 @@ module.exports = {
   plugins: ["@typescript-eslint", "import", "unused-imports", "prettier", "jsdoc", "prefer-arrow"],
   rules: {
     // error rules
+    // プラグインでエラーを出しているルールは、下で定義している
     "no-debugger": "error",
     "no-var": "error",
     "no-irregular-whitespace": [
@@ -39,7 +40,7 @@ module.exports = {
       },
     ],
 
-    // warn rules
+    // warn, ignore rules
     "no-console": ["warn", { allow: ["error", "warn", "info"] }],
     "generator-star-spacing": ["warn", { before: false, after: true }],
     "prefer-const": "warn",
@@ -68,11 +69,11 @@ module.exports = {
     "object-curly-spacing": ["warn", "always"],
     "keyword-spacing": "warn",
     "no-empty": "warn",
+    "operator-linebreak": ["warn", "after", { overrides: { "?": "before", ":": "before" } }],
     "space-before-function-paren": "off",
     "brace-style": "off",
     capIsNew: 0,
     capIsNewExceptions: 0,
-    "operator-linebreak": ["warn", "after", { overrides: { "?": "before", ":": "before" } }],
     // jsdoc-plugin に設定を依存する
     "valid-jsdoc": [0],
     "require-jsdoc": [0],
@@ -142,6 +143,7 @@ module.exports = {
     ],
 
     // prefer-arrow
+    // eslint デフォルトの prefer-arrow-callback では、クラスメソッドを矯正できないので、プラグインを使用している
     "prefer-arrow/prefer-arrow-functions": [
       "error",
       {

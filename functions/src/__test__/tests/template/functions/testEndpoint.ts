@@ -26,7 +26,7 @@ class TestTrigger extends FirestoreOnWriteTrigger<TestEntity, "test/{documentId}
     });
   };
   protected decode = (data: Record<string, unknown>) =>
-    new AdminFirestoreRepositoryJsonConverter(TestEntity).fromJson(data);
+    new AdminFirestoreRepositoryJsonConverter().fromFirestore<TestEntity>(data);
 }
 
 const firestore = getFirestore();

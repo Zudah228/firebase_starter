@@ -61,5 +61,7 @@ export function assertNever(_: never) {
  */
 export const sliceToTwoDimensionalArray = <T>(array: T[], elementLength: number): T[][] => {
   const length = Math.ceil(array.length / elementLength);
-  return new Array(length).fill(undefined).map((_, i) => array.slice(i * elementLength, (i + 1) * elementLength));
+  return new Array(length).fill(undefined).map((_, i) => {
+    return array.slice(i * elementLength, (i + 1) * elementLength);
+  });
 };

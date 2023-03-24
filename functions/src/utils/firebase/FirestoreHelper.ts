@@ -59,7 +59,8 @@ export class FirestoreHelper {
   /**
    * firestore trigger に設定するパスの文字列から、コレクショングループのIDを生成するための、型安全な関数を生成する
    *
-   * @param {string} pathForTrigger - "users/{userId}"
+   * @param {string} pathForTrigger - "users/{userId}/posts/{postId}"
+   * @returns - "posts"
    */
   static collectionId = <Path extends string>(pathForTrigger: Path): string => {
     const pathValues = pathForTrigger.split("/");

@@ -1,0 +1,33 @@
+{
+  "Snippet: Script": {
+    "scope": "typescript",
+    "prefix": "script",
+    "body": [
+      "import { getAuth } from \"firebase-admin/auth\";",
+      "import { getFirestore } from \"firebase-admin/firestore\";",
+      "",
+      "import { initialize } from \"$$src/__scripts__/InitializeFirebaseApp\";",
+      "import { getAdminAuthRepository } from \"$$src/domain/repositories/admin_firebase_auth/AdminFirebaseAuthRepository\";",
+      "import { getAdminFirestoreRepository } from \"$$src/domain/repositories/admin_firestore/AdminFirestoreRepository\";",
+      "",
+      "async function ${TM_FILENAME_BASE/(.*)/${1:/camelcase}/}() {",
+      "  const authRepository = getAdminAuthRepository(getAuth());",
+      "  const firestoreRepository = getAdminFirestoreRepository(getFirestore());",
+      "",
+      "  $0",
+      "}",
+    
+      "async function main() {",
+      "  try {",
+      "    await initialize();",
+      "    await ${TM_FILENAME_BASE/(.*)/${1:/camelcase}/}();",
+      "  } catch (e) {",
+      "    console.error(e);",
+      "  }",
+      "}",
+      "",
+      "main();",
+      ""
+      ]
+  },
+}

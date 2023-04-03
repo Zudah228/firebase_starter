@@ -17,7 +17,7 @@ abstract class FirestoreTriggerBase<T, Path extends string> {
  * ex.)
  */
 export abstract class FirestoreOnWriteTrigger<T, Path extends string> extends FirestoreTriggerBase<T, Path> {
-  abstract onWrite (
+  abstract onWrite: (
     change: Change<DocumentSnapshot>,
     context: EventContext<ParamsOf<Path>>
   ) => PromiseLike<void> | void;

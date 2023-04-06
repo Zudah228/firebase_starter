@@ -1,4 +1,4 @@
-import { Bucket } from "@google-cloud/storage";
+import { Bucket, DownloadResponse } from "@google-cloud/storage";
 import { Storage } from "firebase-admin/lib/storage/storage";
 
 /**
@@ -17,6 +17,10 @@ export class AdminCloudStorageRepository {
 
   delete = async (path: string): Promise<void> => {
     await this.storageBucket.file(path).delete();
+  };
+
+  download = async (path: string): Promise<DownloadResponse> => {
+    return this.storageBucket.file(path).download();
   };
 }
 

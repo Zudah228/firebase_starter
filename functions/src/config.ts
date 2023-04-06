@@ -8,6 +8,7 @@ export const SCHEDULER_TIMEZONE = "Asia/Tokyo";
 
 export const endpoint = functions.region(CLOUD_FUNCTIONS_REGION).runWith({ enforceAppCheck });
 
+export const whiteList = ["http://localhost"];
 // type EnvValues<T> = {
 //   dev: T;
 //   stg: T;

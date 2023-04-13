@@ -4,11 +4,11 @@ import { getStorage } from "firebase-admin/storage";
 import sharp from "sharp";
 
 import { endpoint } from "$src/config";
-import { getAdminCloudStorageRepository } from "$src/domain/repositories/admin_cloud_storage/AdminCloudStorageRepository";
+import { getAdminFirebaseStorageRepository } from "$src/domain/repositories/admin_firebase_storage/AdminFirebaseStorageRepository";
 import { functionsLogger } from "$src/utils/firebase/FunctionsLogger";
 import { HttpCorsHelper } from "$src/utils/http/HttpCorsHelper";
 
-const storageRepository = getAdminCloudStorageRepository(getStorage());
+const storageRepository = getAdminFirebaseStorageRepository(getStorage());
 
 const MAX_WIDTH = 1080;
 const MAX_HEIGHT = 1080;

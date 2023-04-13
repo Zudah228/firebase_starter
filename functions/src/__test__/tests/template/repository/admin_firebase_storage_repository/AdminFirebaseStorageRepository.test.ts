@@ -2,7 +2,7 @@ import * as fs from "fs";
 
 import { FirebaseUnitTest } from "$test/index";
 
-describe("Admin Cloud Storage Repository のテスト", () => {
+describe("Admin Firebase Storage Repository のテスト", () => {
   let firebaseUnitTest: FirebaseUnitTest;
 
   const filePath = "test/sample.png";

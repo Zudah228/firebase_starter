@@ -11,7 +11,7 @@ export type FcmMessageContent = messaging.NotificationMessagePayload;
 /**
  * Firebase Cloud Messaging を利用するためのクラス。
  */
-export class FirebaseMessagingRepository {
+export class AdminFirebaseCloudMessagingRepository {
   constructor(messaging: Messaging) {
     this.messaging = messaging;
   }
@@ -87,6 +87,6 @@ export class FirebaseMessagingRepository {
   };
 }
 
-export function getFirebaseMessagingRepository(messaging: Messaging) {
-  return new FirebaseMessagingRepository(messaging);
+export function getAdminFirebaseMessagingRepository(messaging: Messaging) {
+  return new AdminFirebaseCloudMessagingRepository(messaging);
 }

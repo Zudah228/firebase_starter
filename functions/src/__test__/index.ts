@@ -15,9 +15,9 @@ import { EventContext } from "firebase-functions";
 import * as clientSdkFirestore from "firebase/firestore";
 
 import {
-  AdminCloudStorageRepository,
-  getAdminCloudStorageRepository,
-} from "$src/domain/repositories/admin_cloud_storage/AdminCloudStorageRepository";
+  AdminFirebaseStorageRepository,
+  getAdminFirebaseStorageRepository,
+} from "$src/domain/repositories/admin_firebase_storage/AdminFirebaseStorageRepository";
 import {
   AdminFirebaseAuthRepository,
   getAdminAuthRepository,
@@ -84,11 +84,11 @@ export class FirebaseUnitTest {
   public withAdminSdk = (
     test: (
       firestoreRepository: AdminFirestoreRepository,
-      storageRepository: AdminCloudStorageRepository,
+      storageRepository: AdminFirebaseStorageRepository,
       authRepository: AdminFirebaseAuthRepository
     ) => Promise<void>
   ): Promise<void> => {
-    const storageRepository = getAdminCloudStorageRepository(getStorage());
+    const storageRepository = getAdminFirebaseStorageRepository(getStorage());
     const authRepository = getAdminAuthRepository(getAuth());
     const firestoreRepository = getAdminFirestoreRepository(getFirestore());
 

@@ -1,4 +1,3 @@
-/* eslint-disable quote-props */
 module.exports = {
   root: true,
   env: {
@@ -26,8 +25,8 @@ module.exports = {
   ],
   plugins: ["@typescript-eslint", "import", "unused-imports", "prettier", "jsdoc", "prefer-arrow"],
   rules: {
+    // default linter
     // error rules
-    // プラグインでエラーを出しているルールは、下で定義している
     "no-debugger": "error",
     "no-var": "error",
     "no-irregular-whitespace": [
@@ -55,7 +54,7 @@ module.exports = {
     "no-multi-spaces": "warn",
     "comma-dangle": "warn",
     "no-trailing-spaces": "warn",
-    indent: ["warn", 2, { SwitchCase: 1 }],
+    indent: ["warn", 2, { SwitchCase: 1, ignoredNodes: ["ConditionalExpression", "MemberExpression"] }],
     semi: ["warn", "always"],
     "comma-spacing": "warn",
     "max-len": [
@@ -65,22 +64,24 @@ module.exports = {
         ignoreStrings: true,
       },
     ],
+    "space-before-blocks": "warn",
     quotes: ["warn", "double"],
     "object-curly-spacing": ["warn", "always"],
     "keyword-spacing": "warn",
     "no-empty": "warn",
-    "operator-linebreak": ["warn", "after", { overrides: { "?": "before", ":": "before" } }],
     // スペースに関する警告は、prettier に任せる。
     "space-before-function-paren": "off",
-    "space-before-blocks": "off",
-    "array-bracket-spacing": "off",
     "brace-style": "off",
-
     capIsNew: 0,
+    "quote-props": ["warn", "as-needed"],
     capIsNewExceptions: 0,
+    "eol-last": ["warn", "always"],
+    "operator-linebreak": ["warn", "after", { overrides: { "?": "before", ":": "before" } }],
     // jsdoc-plugin に設定を依存する
     "valid-jsdoc": [0],
     "require-jsdoc": [0],
+
+    // plugin linter
 
     // prettier
     "prettier/prettier": [
@@ -95,15 +96,13 @@ module.exports = {
         bracketSameLine: true,
         useTabs: false,
       },
-      {
-        usePrettierrc: false,
-      },
     ],
 
     // typescript
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-namespace": [0],
+    "@typescript-eslint/ban-types": ["error", { types: { "{}": false } }],
     "@typescript-eslint/no-empty-function": ["warn", { allow: ["private-constructors", "protected-constructors"] }],
 
     // import
